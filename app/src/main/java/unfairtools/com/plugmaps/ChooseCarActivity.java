@@ -2,6 +2,7 @@ package unfairtools.com.plugmaps;
 
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
@@ -40,7 +41,7 @@ public class ChooseCarActivity extends AppCompatActivity {
         MANUFACTURER,MODEL
     }
 
-    private class MyAnimation extends Animation {
+    public static class MyAnimation extends Animation {
         private Matrix matrix;
 
         public MyAnimation(Matrix matrix) {
@@ -313,25 +314,138 @@ double leftPercent =  (((double)(i+1)*mCellWidth)-((double)offset)) / ((double)e
             Matrix m = image.getImageMatrix();
             m.reset();
 
-            if(screenRightPos < (.50d +  oneViewPercentageHalf)){
+            if(screenRightPos < (.45d +  oneViewPercentageHalf)){
                 //rectangle smaller left side
 
-                m.preRotate((float)screenRightPos * 1000f);
+                //m.preRotate((float)screenRightPos * 1000f);
+
+                double screenLeftPos = screenRightPos - (double) 2*oneViewPercentageHalf;
+                Log.e("Double", "Scren left pos  " + screenLeftPos);
 
 
+                double f = 0.25d;
+                int h2 = 105;
+                double i = oneViewPercentageHalf;
+
+                screenLeftPos = (screenLeftPos + 2d*i)/(.5d + 3d*i);
+                screenRightPos = (screenRightPos + 2d*i)/(.5d + 3d*i);
+
+                float leftFactor = (float)(f * h2 * (1d-screenLeftPos));
+                float rightFactor = (float)(f * h2 * (1d-screenRightPos));
+
+
+
+                float moveInFactor = (float)((1d-(screenLeftPos+i))*f*6d*h2);
+
+
+
+
+
+
+               // Log.e("math","L(0,1) R(0,1) to L(" + bottomLeft + "," + topLeft + ") R(" + bottomRight + ", " + topRight + ")");
+
+                int h = image.getHeight();
+                int w = image.getWidth();
+
+                float[] src = {
+                        0, 0, w, 0, w, h, 0, h
+                };
+                float[] dst = {
+                        0 + moveInFactor, 0 + leftFactor, //BL
+                        w, 0 + rightFactor, //BR
+                        w, h - rightFactor, //TR
+                        0 + moveInFactor, h - leftFactor //TL
+                };
+
+                for(float fs: src){
+                    Log.e("logging", "src:" + fs);
+                }
+                for(float fs: dst){
+                    Log.e("logging",  "dst:" + fs);
+                }
+                //m.setSinCos(.5f,1.5f);
+                m.setPolyToPoly(src, 0, dst, 0, 4);
+                MyAnimation animation = new MyAnimation(m);
+                animation.setDuration(0);
+                animation.setFillAfter(true);
+                image.clearAnimation();
+                image.setAnimation(animation);
                 Log.e("View", "View is on left");
-            }else if(screenRightPos > (.50d - oneViewPercentageHalf)){
+                return;
+
+
+
+            }else if(screenRightPos > (.55d - oneViewPercentageHalf)){
                 //m.preSkew(-.1f,.1f);
-                m.preRotate((float)screenRightPos * 1000f);
+                //m.preRotate((float)screenRightPos * 1000f);
+
+                double screenLeftPos = screenRightPos - (double) 2*oneViewPercentageHalf;
+                Log.e("Double", "Scren left pos  " + screenLeftPos);
+
+
+                double f = 0.25d;
+                int h2 = 105;
+                double i = oneViewPercentageHalf;
+
+                screenLeftPos = (screenLeftPos + i - .5d)/(.5d + 3d*i);
+                screenRightPos = (screenRightPos + i - .5d)/(.5d + 3d*i);
+
+                float leftFactor = (float)(f * h2 * (screenLeftPos));
+                float rightFactor = (float)(f * h2 * (screenRightPos));
+
+
+
+                float moveInFactor = (float)((screenRightPos)*f*2d*h2);
+
+
+
+
+
+
+                // Log.e("math","L(0,1) R(0,1) to L(" + bottomLeft + "," + topLeft + ") R(" + bottomRight + ", " + topRight + ")");
+
+                int h = image.getHeight();
+                int w = image.getWidth();
+
+                float[] src = {
+                        0, 0, w, 0, w, h, 0, h
+                };
+                float[] dst = {
+                        0 , 0 + leftFactor, //BL
+                        w - moveInFactor, 0 + rightFactor, //BR
+                        w - moveInFactor, h - rightFactor, //TR
+                        0, h - leftFactor //TL
+                };
+
+                for(float fs: src){
+                    Log.e("logging", "src:" + fs);
+                }
+                for(float fs: dst){
+                    Log.e("logging",  "dst:" + fs);
+                }
+                //m.setSinCos(.5f,1.5f);
+                m.setPolyToPoly(src, 0, dst, 0, 4);
+                MyAnimation animation = new MyAnimation(m);
+                animation.setDuration(0);
+                animation.setFillAfter(true);
+                image.clearAnimation();
+                image.setAnimation(animation);
+
 
                 //we're to the left of middle
                 Log.e("View", "View is on right");
+                return;
             }else{
+                image.setImageMatrix(defaultMatrix);
+                m = image.getImageMatrix();
+                m.reset();
+                image.setImageMatrix(m);
+
                 //dead center, do nothing.
                 Log.e("View", "View is in middle)");
             }
 
-            image.setImageMatrix(m);
+            //image.setImageMatrix(m);
 //            image.invalidate();
 //            image.requestLayout();
 

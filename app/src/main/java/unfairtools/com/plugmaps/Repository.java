@@ -30,16 +30,25 @@ public class Repository {
                     }
 
 
-                    if (i%5 == 1) mData.stringInfo = "Toyota";
+                    if (i%5 == 1) {
+                        mData.stringInfo = "Toyota";
+                        mData.img = context.getDrawable(R.mipmap.ic_tesla2);
+                    }
 
-                    if (i%5 == 2) mData.stringInfo = "Chevy";
+                    if (i%5 == 2){
+                        mData.stringInfo = "Chevy";
+                        mData.img = context.getDrawable(R.mipmap.ic_tesla2);
+                    }
 
                     if (i%5 == 3) {
                         mData.stringInfo = "Ford";
                         mData.img = context.getDrawable(R.mipmap.ic_ford);
                     }
 
-                    if (i%5 == 4) mData.stringInfo = "Kandi";
+                    if (i%5 == 4){
+                        mData.stringInfo = "Kandi";
+                        mData.img = context.getDrawable(R.mipmap.ic_tesla2);
+                    }
                     data.add(mData);
                 }
                 break;
