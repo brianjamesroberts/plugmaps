@@ -172,7 +172,7 @@ public class ChooseCarActivity extends AppCompatActivity {
 
 
 
-double leftPercent =  (((double)(i+1)*mCellWidth)-((double)offset)) / ((double)extent);
+                    double leftPercent =  (((double)(i+1)*mCellWidth)-((double)offset)) / ((double)extent);
                     double oneHalfImageTileWidth = (((double)mCellWidth)/((double)extent))/2f;
                     vh.updateMatrix(leftPercent,oneHalfImageTileWidth);
 
@@ -183,8 +183,9 @@ double leftPercent =  (((double)(i+1)*mCellWidth)-((double)offset)) / ((double)e
                     //vh.updateMatrix(0d,0d);
                     Log.e("Viewholder Pos", "" + i + ": " + vh.getPosition());
 
+                    vh.image.setBackgroundColor(Color.argb(100,0,100,20));
                     if(i==actualItem) {
-                        vh.image.setBackgroundColor(Color.argb(100,0,100,20));
+                       // vh.image.setBackgroundColor(Color.argb(100,0,100,20));
 
 //                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(170, 170);
 //                        vh.image.setLayoutParams(layoutParams);
@@ -201,7 +202,7 @@ double leftPercent =  (((double)(i+1)*mCellWidth)-((double)offset)) / ((double)e
 //                            matrix.postSkew(-0.5f, 0.5f, 0f, 0f);
 //                            vh.image.setImageMatrix(matrix);
 //                        }
-                        vh.image.setBackgroundColor(Color.rgb(255,255,255));
+                        //vh.image.setBackgroundColor(Color.rgb(255,255,255));
 
 
 //
@@ -250,7 +251,7 @@ double leftPercent =  (((double)(i+1)*mCellWidth)-((double)offset)) / ((double)e
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.car_image_text_tile, parent, false);
 
-            ChooseCarActivity.ModelMakeHolder imageTile = new ChooseCarActivity.ModelMakeHolder(view);
+            ChooseCarActivity.ModelMakeHolder imageTile = new ChooseCarActivity.ModelMakeHolder(view,displayMetrics);
             return imageTile;
         }
 
@@ -299,12 +300,14 @@ double leftPercent =  (((double)(i+1)*mCellWidth)-((double)offset)) / ((double)e
         public ImageView image;
         public TextView textView;
         public Matrix defaultMatrix;
+        public DisplayMetrics displayMetrics;
 
-        public ModelMakeHolder(View itemView) {
+        public ModelMakeHolder(View itemView, DisplayMetrics displayM) {
             super(itemView);
             image = (ImageView) itemView.findViewById(R.id.make_model_image);
             textView = (TextView) itemView.findViewById(R.id.make_model_text);
             defaultMatrix = image.getImageMatrix();
+            this.displayMetrics = displayM;
         }
 
         public void updateMatrix(double screenRightPos, double oneViewPercentageHalf){
@@ -314,7 +317,7 @@ double leftPercent =  (((double)(i+1)*mCellWidth)-((double)offset)) / ((double)e
             Matrix m = image.getImageMatrix();
             m.reset();
 
-            if(screenRightPos < (.45d +  oneViewPercentageHalf)){
+            if(screenRightPos < (.40d +  oneViewPercentageHalf)){
                 //rectangle smaller left side
 
                 //m.preRotate((float)screenRightPos * 1000f);
@@ -357,12 +360,12 @@ double leftPercent =  (((double)(i+1)*mCellWidth)-((double)offset)) / ((double)e
                         0 + moveInFactor, h - leftFactor //TL
                 };
 
-                for(float fs: src){
-                    Log.e("logging", "src:" + fs);
-                }
-                for(float fs: dst){
-                    Log.e("logging",  "dst:" + fs);
-                }
+//                for(float fs: src){
+//                    Log.e("logging", "src:" + fs);
+//                }
+//                for(float fs: dst){
+//                    Log.e("logging",  "dst:" + fs);
+//                }
                 //m.setSinCos(.5f,1.5f);
                 m.setPolyToPoly(src, 0, dst, 0, 4);
                 MyAnimation animation = new MyAnimation(m);
@@ -375,7 +378,7 @@ double leftPercent =  (((double)(i+1)*mCellWidth)-((double)offset)) / ((double)e
 
 
 
-            }else if(screenRightPos > (.55d - oneViewPercentageHalf)){
+            }else if((screenRightPos - oneViewPercentageHalf) > .55d){
                 //m.preSkew(-.1f,.1f);
                 //m.preRotate((float)screenRightPos * 1000f);
 
@@ -395,8 +398,13 @@ double leftPercent =  (((double)(i+1)*mCellWidth)-((double)offset)) / ((double)e
 
 
 
-                float moveInFactor = (float)((screenRightPos)*f*2d*h2);
+                float moveInFactor = (float)((screenRightPos)*f*3d*h2);
 
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                int margin = Math.abs((int)(30-((rightFactor)/3)*Constants.dpToInt(1,displayMetrics)));
+                Log.e("Margin", "Margin is " + margin);
+                params.setMargins(margin,0,margin,0);
+                image.setLayoutParams(params);
 
 
 
@@ -417,12 +425,12 @@ double leftPercent =  (((double)(i+1)*mCellWidth)-((double)offset)) / ((double)e
                         0, h - leftFactor //TL
                 };
 
-                for(float fs: src){
-                    Log.e("logging", "src:" + fs);
-                }
-                for(float fs: dst){
-                    Log.e("logging",  "dst:" + fs);
-                }
+//                for(float fs: src){
+//                    Log.e("logging", "src:" + fs);
+//                }
+//                for(float fs: dst){
+//                    Log.e("logging",  "dst:" + fs);
+//                }
                 //m.setSinCos(.5f,1.5f);
                 m.setPolyToPoly(src, 0, dst, 0, 4);
                 MyAnimation animation = new MyAnimation(m);
@@ -442,7 +450,7 @@ double leftPercent =  (((double)(i+1)*mCellWidth)-((double)offset)) / ((double)e
                 image.setImageMatrix(m);
 
                 //dead center, do nothing.
-                Log.e("View", "View is in middle)");
+                Log.e("View", "View is in MIDDLE!!!)");
             }
 
             //image.setImageMatrix(m);
