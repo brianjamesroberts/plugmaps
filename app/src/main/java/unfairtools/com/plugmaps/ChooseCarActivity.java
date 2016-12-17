@@ -33,6 +33,9 @@ public class ChooseCarActivity extends AppCompatActivity {
     private int mCellWidth;
     private int mOffset;
 
+    public static int ManufacturerTile_Width=80;
+    public static int numBrands=0;
+
     public enum CarPickerType {
         MANUFACTURER,MODEL
     }
@@ -62,7 +65,7 @@ public class ChooseCarActivity extends AppCompatActivity {
         this.mScreenWidth = displaymetrics.widthPixels;
 
 
-        mCellWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 90, getResources()
+        mCellWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ManufacturerTile_Width, getResources()
                 .getDisplayMetrics());
 
         mOffset = (this.mScreenWidth / 2) - (mCellWidth / 2);
@@ -76,35 +79,6 @@ public class ChooseCarActivity extends AppCompatActivity {
 
         final RecyclerView manufacturerRecycler =(RecyclerView) findViewById(R.id.manufacturer_recycler);
 
-        ViewTreeObserver viewTreeObserver = manufacturerRecycler.getViewTreeObserver();
-        if (viewTreeObserver.isAlive()) {
-            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    manufacturerRecycler.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    int viewWidth = manufacturerRecycler.getWidth();
-                    int viewHeight = manufacturerRecycler.getHeight();
-
-                    Matrix m = new Matrix();
-                    int w = viewWidth;
-                    int h = viewHeight ;
-                    Log.e("Width, height:" , viewWidth + ", "+ viewHeight);
-                    final float DELTAX = w * 0.05f;
-                    float[] src = {
-                            0, 0, w, 0, w, h, 0, h
-                    };
-                    float[] dst = {
-                            0, 0, w, 0, w - DELTAX, h, DELTAX, h
-                    };
-                    m.setPolyToPoly(src, 0, dst, 0, 4);
-
-                    MyAnimation animation = new MyAnimation(m);
-                    animation.setDuration(0);
-                    animation.setFillAfter(true);
-                    manufacturerRecycler.setAnimation(animation);
-                }
-            });
-        }
 
 
         RecyclerView makeRecycler = (RecyclerView) findViewById(R.id.make_recycler);
@@ -115,6 +89,39 @@ public class ChooseCarActivity extends AppCompatActivity {
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(manufacturerRecycler);
 
+
+        ViewTreeObserver viewTreeObserver = manufacturerRecycler.getViewTreeObserver();
+        if (viewTreeObserver.isAlive()) {
+            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    manufacturerRecycler.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    int viewWidth = manufacturerRecycler.getWidth();
+                    int viewHeight = manufacturerRecycler.getHeight();
+
+
+
+                    Matrix m = new Matrix();
+                    int w = viewWidth;
+                    int h = viewHeight ;
+                    Log.e("Width, height:" , viewWidth + ", "+ viewHeight);
+                    final float DELTAX = w * 0.15f;
+                    float[] src = {
+                            0, 0, w, 0, w, h, 0, h
+                    };
+                    float[] dst = {
+                            0, 0, w, 0, w - DELTAX, h, DELTAX, h
+                    };
+                    m.setSinCos(.5f,1.5f);
+                    //m.setPolyToPoly(src, 0, dst, 0, 4);
+
+                    MyAnimation animation = new MyAnimation(m);
+                    animation.setDuration(0);
+                    animation.setFillAfter(true);
+                    //manufacturerRecycler.setAnimation(animation);
+                }
+            });
+        }
 
         manufacturerRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -129,10 +136,10 @@ public class ChooseCarActivity extends AppCompatActivity {
                 int percentage = (int)(100.0 * offset / (float)(range - extent));
                 Log.e("layoutmanager","children: " + mLLM.findFirstCompletelyVisibleItemPosition());
                 int mWidth = mLLM.findViewByPosition(mLLM.findFirstCompletelyVisibleItemPosition()).getWidth();
-//                Log.i("RecyclerView", "scroll percentage: "+ percentage + "%");
-//                Log.i("REC","offest" + offset);
-//                Log.i("REC","extent" + extent);
-//                Log.i("REC","range" + range);
+                Log.i("RecyclerView", "scroll percentage: "+ percentage + "%");
+                Log.i("REC","offest" + offset);
+                Log.i("REC","extent" + extent);
+                Log.i("REC","range" + range);
 //                Log.i("Centered item: ", "Centered item: " + (((offset/mWidth) + (extent/2)/mWidth))%5);
                 int actualItem = ((offset/mWidth) + (extent/2)/mWidth);
                 //Log.i("Centered actual item: ", "" + ((offset/mWidth) + (extent/2)/mWidth));
@@ -144,13 +151,37 @@ public class ChooseCarActivity extends AppCompatActivity {
 
 
 
+
+
+
+
+
                 for (int i =  mLLM.findFirstVisibleItemPosition(); i <= mLLM.findLastVisibleItemPosition(); i++){
 
                     //recyclerView.findViewHolderForAdapterPosition(i).getAdapterPosition();
 
                     // i is the adapter position
 
+
                     ModelMakeHolder vh = (ModelMakeHolder)recyclerView.findViewHolderForAdapterPosition(i);
+
+
+                    //pos = - BrandTile_extent
+
+
+
+
+double leftPercent =  (((double)(i+1)*mCellWidth)-((double)offset)) / ((double)extent);
+                    double oneHalfImageTileWidth = (((double)mCellWidth)/((double)extent))/2f;
+                    vh.updateMatrix(leftPercent,oneHalfImageTileWidth);
+
+
+//                    Log.e(" i", "i(" + i + ")*mCellWidth(" + mCellWidth+")) - offset("+offset+"))/extent("+extent+")");
+//                    Log.e("equals", "equals " + ((i*mCellWidth) - extent)/mScreenWidth);
+
+                    //vh.updateMatrix(0d,0d);
+                    Log.e("Viewholder Pos", "" + i + ": " + vh.getPosition());
+
                     if(i==actualItem) {
                         vh.image.setBackgroundColor(Color.argb(100,0,100,20));
 
@@ -266,11 +297,48 @@ public class ChooseCarActivity extends AppCompatActivity {
 
         public ImageView image;
         public TextView textView;
+        public Matrix defaultMatrix;
 
         public ModelMakeHolder(View itemView) {
             super(itemView);
             image = (ImageView) itemView.findViewById(R.id.make_model_image);
             textView = (TextView) itemView.findViewById(R.id.make_model_text);
+            defaultMatrix = image.getImageMatrix();
+        }
+
+        public void updateMatrix(double screenRightPos, double oneViewPercentageHalf){
+
+            Log.e("Updating", "updateMatrix(" + screenRightPos + "), oneVIewPercentageHalf(" + oneViewPercentageHalf + ")");
+            image.setImageMatrix(defaultMatrix);
+            Matrix m = image.getImageMatrix();
+            m.reset();
+
+            if(screenRightPos < (.50d +  oneViewPercentageHalf)){
+                //rectangle smaller left side
+
+                m.preRotate((float)screenRightPos * 1000f);
+
+
+                Log.e("View", "View is on left");
+            }else if(screenRightPos > (.50d - oneViewPercentageHalf)){
+                //m.preSkew(-.1f,.1f);
+                m.preRotate((float)screenRightPos * 1000f);
+
+                //we're to the left of middle
+                Log.e("View", "View is on right");
+            }else{
+                //dead center, do nothing.
+                Log.e("View", "View is in middle)");
+            }
+
+            image.setImageMatrix(m);
+//            image.invalidate();
+//            image.requestLayout();
+
+
+
+
+
         }
 
 

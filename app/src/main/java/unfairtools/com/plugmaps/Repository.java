@@ -20,6 +20,7 @@ public class Repository {
         ArrayList<ChooseCarActivity.MakeModelData> data = new ArrayList<ChooseCarActivity.MakeModelData>();
         switch (carPickerType) {
             case MANUFACTURER:
+                ChooseCarActivity.numBrands=50;
                 for (int i = 0; i < 50; i++) {
                     ChooseCarActivity.MakeModelData mData = new ChooseCarActivity.MakeModelData();
                     mData.img = context.getResources().getDrawable(R.drawable.ic_airplane);
