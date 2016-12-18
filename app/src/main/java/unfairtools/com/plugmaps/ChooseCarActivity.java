@@ -293,10 +293,10 @@ public class ChooseCarActivity extends AppCompatActivity {
                         0, 0, w, 0, w, h, 0, h
                 };
                 float[] dst = {
-                        0 + (shrinkFactorSmall*(.11f*shrinkFactorSmall))*3 , 0 + shrinkFactorBig, //BL
+                        0 + (shrinkFactorSmall*(.15f*shrinkFactorSmall))*3 , 0 + shrinkFactorBig, //BL
                         w, 0 + shrinkFactorSmall, //BR
                         w, h - shrinkFactorSmall, //TR
-                        0 + (shrinkFactorSmall*(.11f*shrinkFactorSmall))*3, h - shrinkFactorBig //TL
+                        0 + (shrinkFactorSmall*(.15f*shrinkFactorSmall))*3, h - shrinkFactorBig //TL
                 };
 
 
@@ -342,10 +342,10 @@ public class ChooseCarActivity extends AppCompatActivity {
                 };
 
                 float[] dst = {
-                        w-(shrinkFactorSmall*(.11f*shrinkFactorSmall))*3, shrinkFactorBig,
+                        w-(shrinkFactorSmall*(.15f*shrinkFactorSmall))*3, shrinkFactorBig,
                         0, shrinkFactorSmall,
                         0, h-shrinkFactorSmall,
-                        w-(shrinkFactorSmall*(.11f*shrinkFactorSmall))*3, h - shrinkFactorBig
+                        w-(shrinkFactorSmall*(.15f*shrinkFactorSmall))*3, h - shrinkFactorBig
                 };
 
 
