@@ -21,6 +21,7 @@ import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
@@ -84,6 +85,7 @@ public class ChooseCarActivity extends AppCompatActivity {
 
 
 
+        //TODO: Implement this bad boy!
         RecyclerView makeRecycler = (RecyclerView) findViewById(R.id.make_recycler);
 
         final LinearLayoutManager mLLM = new LinearLayoutManager(getApplication(),LinearLayoutManager.HORIZONTAL,false);
@@ -92,6 +94,9 @@ public class ChooseCarActivity extends AppCompatActivity {
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(manufacturerRecycler);
 
+
+
+        //this commented section skews the entire recyclerview's screen with setPolyToPoly call on Matrix
 
 //        ViewTreeObserver viewTreeObserver = manufacturerRecycler.getViewTreeObserver();
 //        if (viewTreeObserver.isAlive()) {
@@ -115,13 +120,13 @@ public class ChooseCarActivity extends AppCompatActivity {
 //                    float[] dst = {
 //                            0, 0, w, 0, w - DELTAX, h, DELTAX, h
 //                    };
-//                    m.setSinCos(.5f,1.5f);
-//                    //m.setPolyToPoly(src, 0, dst, 0, 4);
+//                    //m.setSinCos(.5f,1.5f);
+//                    m.setPolyToPoly(src, 0, dst, 0, 4);
 //
 //                    MyAnimation animation = new MyAnimation(m);
 //                    animation.setDuration(0);
 //                    animation.setFillAfter(true);
-//                    //manufacturerRecycler.setAnimation(animation);
+//                    manufacturerRecycler.setAnimation(animation);
 //                }
 //            });
 //        }
@@ -138,36 +143,23 @@ public class ChooseCarActivity extends AppCompatActivity {
 
                 int percentage = (int)(100.0 * offset / (float)(range - extent));
                 int mWidth = mLLM.findViewByPosition(mLLM.findFirstCompletelyVisibleItemPosition()).getWidth();
-//
+
                 int actualItem = (((offset)/mWidth) + ((extent+mCellWidth)/2)/mWidth);
 
-                Log.i("RecyclerView", "scroll percentage: "+ percentage + "%");
-                //                Log.e("layoutmanager","children: " + mLLM.findFirstCompletelyVisibleItemPosition());
-//                Log.i("REC","offest" + offset);
-//                Log.i("REC","extent" + extent);
-//                Log.i("REC","range" + range);
-//                Log.i("Centered item: ", "Centered item: " + (((offset/mWidth) + (extent/2)/mWidth))%5);
-                //Log.i("Centered actual item: ", "" + ((offset/mWidth) + (extent/2)/mWidth));
-
-
-                ModelMakeHolder m = (ModelMakeHolder)manufacturerRecycler.getChildViewHolder(mLLM.getChildAt(mLLM.getChildCount()/2));
-               // Log.e("Visible children:", "visible children " + mLLM.getChildCount());
-
-
-
+//                  Log.i("RecyclerView", "scroll percentage: "+ percentage + "%");
+//                  Log.i("layoutmanager","children: " + mLLM.findFirstCompletelyVisibleItemPosition());
+//                  Log.i("REC","offest" + offset);
+//                  Log.i("REC","extent" + extent);
+//                  Log.i("REC","range" + range);
+//                  Log.i("Centered item: ", "Centered item: " + (((offset/mWidth) + (extent/2)/mWidth))%5);
+//                  Log.i("Centered actual item: ", "" + ((offset/mWidth) + (extent/2)/mWidth));
 
 
                 for (int i =  mLLM.findFirstVisibleItemPosition(); i <= mLLM.findLastVisibleItemPosition(); i++){
 
-
-
+                    //Log.e("Viewholder Pos", "" + i + ": " + vh.getPosition());
 
                     ModelMakeHolder vh = (ModelMakeHolder)recyclerView.findViewHolderForAdapterPosition(i);
-
-
-
-
-
 
                     double leftPercent =  (((double)(i+1)*mCellWidth)-((double)offset)) / ((double)extent);
                     double oneHalfImageTileWidth = (((double)mCellWidth)/((double)extent))/2f;
@@ -175,48 +167,12 @@ public class ChooseCarActivity extends AppCompatActivity {
                     vh.updateMatrix(leftPercent,oneHalfImageTileWidth);
 
 
-//                    Log.e(" i", "i(" + i + ")*mCellWidth(" + mCellWidth+")) - offset("+offset+"))/extent("+extent+")");
-//                    Log.e("equals", "equals " + ((i*mCellWidth) - extent)/mScreenWidth);
-
-                    //vh.updateMatrix(0d,0d);
-                    Log.e("Viewholder Pos", "" + i + ": " + vh.getPosition());
-
-                    //vh.image.setBackgroundColor(Color.argb(100,0,100,20));
-                    if(i==actualItem) {
+                    if(i==actualItem) { //its the selected item (in the middle of the recycler)
                         vh.image.setBackgroundColor(Color.argb(100,0,100,20));
-
-//                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(170, 170);
-//                        vh.image.setLayoutParams(layoutParams);
-//                        vh.image.requestLayout();
-
-
                     }else {
-//                        if(i<actualItem) {
-//                            Matrix matrix = new Matrix();
-//                            matrix.postSkew(0.5f, 0.5f, 0f, 0f);
-//                            vh.image.setImageMatrix(matrix);
-//                        }else{
-//                            Matrix matrix = new Matrix();
-//                            matrix.postSkew(-0.5f, 0.5f, 0f, 0f);
-//                            vh.image.setImageMatrix(matrix);
-//                        }
                         vh.image.setBackgroundColor(Color.argb(100,119, 121, 130));
-
-
-//
-//                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(100, 100);
-//                        vh.image.setLayoutParams(layoutParams);
-//                        vh.image.requestLayout();
-
-
                     }
-
-
-
-                    //vh.imageView.setTranslationY( computedParalaxOffset ); // assuming ViewHolder has a imageView field on which you want to apply the parallax effect
                 }
-
-                //m.image.requestLayout();
 
             }
         });
@@ -259,7 +215,6 @@ public class ChooseCarActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(ModelMakeHolder holder, int position) {
 
-            //holder.image.setBackground(data.get(position).img);
             holder.image.setImageDrawable(data.get(position).img);
             holder.textView.setText(data.get(position).stringInfo);
 
@@ -276,15 +231,6 @@ public class ChooseCarActivity extends AppCompatActivity {
                                     (recycler.getWidth())/2 - Constants.dpToInt(Constants.CarHolderWidth,displayMetrics)/2);
                 }
             });
-
-//            holder.image.setScaleType(ImageView.ScaleType.MATRIX);
-//            Matrix imageMatrix = holder.image.getImageMatrix();
-//            imageMatrix.setSkew(.25f,0f, 0.5f, 0.5f);
-//            //imageMatrix.setTranslate(holder.getLayoutPosition()*5,holder.getLayoutPosition()*5);
-//            holder.image.setImageMatrix(imageMatrix);
-
-
-
         }
 
 
@@ -300,8 +246,9 @@ public class ChooseCarActivity extends AppCompatActivity {
         public TextView textView;
         public Matrix defaultMatrix;
         public DisplayMetrics displayMetrics;
-        public Space spacer1;
-        public Space spacer2;
+//        public Space spacer1;
+//        public Space spacer2;
+        public FrameLayout layout;
 
         public static float bigFactor = .37f;
         public static float smallFactor = .15f;
@@ -312,22 +259,21 @@ public class ChooseCarActivity extends AppCompatActivity {
             textView = (TextView) itemView.findViewById(R.id.make_model_text);
             defaultMatrix = image.getImageMatrix();
             this.displayMetrics = displayM;
-            this.spacer1 = (Space) itemView.findViewById(R.id.space1);
-            this.spacer2 = (Space) itemView.findViewById(R.id.space2);
+//            this.spacer1 = (Space) itemView.findViewById(R.id.space1);
+//            this.spacer2 = (Space) itemView.findViewById(R.id.space2);
+            this.layout = (FrameLayout) itemView.findViewById(R.id.brand_holder_layout);
         }
 
         public void updateMatrix(double screenRightPos, double oneViewPercentageHalf){
 
-          //  Log.e("Updating", "updateMatrix(" + screenRightPos + "), oneVIewPercentageHalf(" + oneViewPercentageHalf + ")");
-           // image.setImageMatrix(defaultMatrix);
+          //  Log.e("Updating", "updateMatrix(" + screenRightPos + "), oneViewPercentageHalf(" + oneViewPercentageHalf + ")");
+
+
             Matrix m = new Matrix();
-                    // image.getImageMatrix();
-//            m.reset();
-
             if(screenRightPos < (.50 +  oneViewPercentageHalf)){
-                //rectangle smaller left side
-
-                //m.preRotate((float)screenRightPos * 1000f);
+                //this view's centre is left of midpoint of the recyclerview
+                //(rectangle should appear smaller on its left side)
+                //Log.e("View", "View is on left");
 
                 int h = image.getHeight();
                 int w = image.getWidth();
@@ -337,30 +283,15 @@ public class ChooseCarActivity extends AppCompatActivity {
                 double midViewPos = screenRightPos -  oneViewPercentageHalf;
                 double screenLeftFactor = Math.min(1d,midViewPos/(.5d) + oneViewPercentageHalf*2d);
 
-                double screenLeftPos = screenRightPos - ((double) 2)*oneViewPercentageHalf;
 
+                int spacer2Width =Math.max(0,(int)(screenLeftFactor * Constants.dpToInt(17,displayMetrics)));
+                int spacer1Width = Constants.dpToInt(34,displayMetrics) - spacer2Width;
 
-
-
-                int spacer1Width =Math.max(0,(int)(screenLeftFactor * Constants.dpToInt(17,displayMetrics)));
-
-                int spacer2Width = Constants.dpToInt(34,displayMetrics) - spacer1Width;
-
-//                Log.e("Spacer factor %", "Spacer factor %: " + screenLeftFactor);
-  //              Log.e("Spacer", "Spacer1 width: " + spacer1Width);
-                spacer2.getLayoutParams().width = spacer1Width;
-                spacer1.getLayoutParams().width = spacer2Width;
-
-                spacer2.requestLayout();
-                spacer1.requestLayout();
-                image.requestLayout();
-
-
-
+                ViewGroup.MarginLayoutParams params  = (ViewGroup.MarginLayoutParams)image.getLayoutParams();
+                params.setMargins(spacer1Width,0,spacer2Width,0);
 
                 float shrinkFactorBig = (1f-(float)screenLeftFactor)*bigFactor*h;
                 float shrinkFactorSmall = (1f-(float)screenLeftFactor)*smallFactor*h;
-              //  Log.e("Blah","big,small , width: " + shrinkFactorBig+ ", " + shrinkFactorSmall + ", " + w);
 
                 float[] src = {
                         0, 0, w, 0, w, h, 0, h
@@ -372,64 +303,43 @@ public class ChooseCarActivity extends AppCompatActivity {
                         0 + shrinkFactorSmall*3, h - shrinkFactorBig //TL
                 };
 
-//                for(float f2 : dst)
-//                    Log.e("dst", "dst: " + f2);
-                //m.reset();
+
                 m.setPolyToPoly(src, 0, dst, 0, 4);
                 MyAnimation animation = new MyAnimation(m);
                 animation.setDuration(0);
                 animation.setFillAfter(true);
                 image.clearAnimation();
                 image.setAnimation(animation);
-                //Log.e("View", "View is on left");
-                return;
-
-
 
             }else if((screenRightPos - oneViewPercentageHalf) > .50d){
-                //m.preSkew(-.1f,.1f);
-                //m.preRotate((float)screenRightPos * 1000f);
-
-                double screenLeftPos = screenRightPos - (double) 2*oneViewPercentageHalf;
-                //Log.e("Double", "Scren left pos  " + screenLeftPos);
+                //this view's centre is right of midpoint of the recyclerview
+                //(rectangle should appear smaller on its right side)
+                //Log.e("View", "View is on right");
 
 
-
-                //screenRightPos = (screenRightPos + i - .5d)/(.5d + 3d*i);
 
                 int h = image.getHeight();
                 int w = image.getWidth();
 
 
+                //midpoint(centre) of this view % (0 to 1 value)
                 double midViewPos = screenRightPos - oneViewPercentageHalf;
-                //Log.e("mid", "midview pos:" + midViewPos);
                 double screenLeftFactor = Math.min(1d,1-((midViewPos-.5d))/(.5d) + oneViewPercentageHalf*2d);
 
 
 
-
-
+                //spacers compact views together (and towards centre) as they spread towards the left and right edges of the recyclerview.
                 int spacer1Width =Math.max(0,(int)(screenLeftFactor * Constants.dpToInt(17,displayMetrics)));
-
-
                 int spacer2Width = Constants.dpToInt(34,displayMetrics) - spacer1Width;
 
-//                Log.e("Spacer factor %", "Spacer factor %: " + screenLeftFactor);
-//                Log.e("Spacer", "Spacer1, spacer2 width: " + spacer1Width + ", " + spacer2Width);
-                spacer1.getLayoutParams().width = spacer1Width;
-                spacer2.getLayoutParams().width = spacer2Width;
 
-//                spacer1.getLayoutParams().width = 0;
-//                spacer2.getLayoutParams().width = 0;
+                ViewGroup.MarginLayoutParams params  = (ViewGroup.MarginLayoutParams)image.getLayoutParams();
+                params.setMargins(spacer1Width,0,spacer2Width,0);
 
-                spacer2.requestLayout();
-                spacer1.requestLayout();
-                image.requestLayout();
 
 
                 float shrinkFactorBig = (1f-(float)screenLeftFactor)*bigFactor*h;
                 float shrinkFactorSmall = (1f-(float)screenLeftFactor)*smallFactor*h;
-                //Log.e("Blah","big,small , width: " + shrinkFactorBig+ ", " + shrinkFactorSmall + ", " + w);
 
                 float[] src = {
                          w, 0,0, 0, 0, h,w, h
@@ -450,32 +360,25 @@ public class ChooseCarActivity extends AppCompatActivity {
                 image.clearAnimation();
                 image.setAnimation(animation);
 
-                //we're to the left of middle
-                //Log.e("View", "View is on right");
-                return;
+
+                //return;
             }else{
+                //perfect centre!
+
+
                 image.setImageMatrix(defaultMatrix);
                 m = image.getImageMatrix();
                 m.reset();
                 image.setImageMatrix(new Matrix());
-                image.requestLayout();
 
-                spacer1.getLayoutParams().width = Constants.dpToInt(17,displayMetrics);
-                spacer2.getLayoutParams().width = Constants.dpToInt(17,displayMetrics);
-                spacer1.requestLayout();
-                spacer2.requestLayout();
-                //dead center, do nothing.
+                ViewGroup.MarginLayoutParams params  = (ViewGroup.MarginLayoutParams)image.getLayoutParams();
+                params.setMargins(Constants.dpToInt(17,displayMetrics),0,Constants.dpToInt(17,displayMetrics),0);
                 Log.e("View", "View is in MIDDLE!!!)");
             }
 
-            //image.setImageMatrix(m);
-//            image.invalidate();
-//            image.requestLayout();
 
-
-
-
-
+            //causes console warning... maybe add an onLayoutChangedListener and update from there?
+            image.requestLayout();
         }
 
 
