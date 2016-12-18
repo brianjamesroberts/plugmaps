@@ -24,12 +24,11 @@ public class Repository {
                 for (int i = 0; i < 50; i++) {
                     ChooseCarActivity.MakeModelData mData = new ChooseCarActivity.MakeModelData();
                     mData.img = context.getResources().getDrawable(R.drawable.ic_airplane);
+
                     if (i%5== 0) {
                         mData.stringInfo = "Tesla ";
                         mData.img = context.getDrawable(R.mipmap.ic_tesla2);
                     }
-
-
                     if (i%5 == 1) {
                         mData.stringInfo = "Toyota ";
                         mData.img = context.getDrawable(R.mipmap.ic_toyota);
@@ -40,12 +39,12 @@ public class Repository {
                         mData.img = context.getDrawable(R.mipmap.ic_chevy);
                     }
 
-                    if (i%5 == 3) {
+                    if (i%5 == 4) {
                         mData.stringInfo = "Ford";
                         mData.img = context.getDrawable(R.mipmap.ic_ford);
                     }
 
-                    if (i%5 == 4){
+                    if (i%5 == 3){
                         mData.stringInfo = "Faraday ";
                         mData.img = context.getDrawable(R.mipmap.ic_faraday);
                     }

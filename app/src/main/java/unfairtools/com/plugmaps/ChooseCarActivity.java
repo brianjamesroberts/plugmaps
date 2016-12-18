@@ -137,14 +137,16 @@ public class ChooseCarActivity extends AppCompatActivity {
                 int range = recyclerView.computeHorizontalScrollRange();
 
                 int percentage = (int)(100.0 * offset / (float)(range - extent));
-//                Log.e("layoutmanager","children: " + mLLM.findFirstCompletelyVisibleItemPosition());
                 int mWidth = mLLM.findViewByPosition(mLLM.findFirstCompletelyVisibleItemPosition()).getWidth();
-//                Log.i("RecyclerView", "scroll percentage: "+ percentage + "%");
+//
+                int actualItem = (((offset)/mWidth) + ((extent+mCellWidth)/2)/mWidth);
+
+                Log.i("RecyclerView", "scroll percentage: "+ percentage + "%");
+                //                Log.e("layoutmanager","children: " + mLLM.findFirstCompletelyVisibleItemPosition());
 //                Log.i("REC","offest" + offset);
 //                Log.i("REC","extent" + extent);
 //                Log.i("REC","range" + range);
 //                Log.i("Centered item: ", "Centered item: " + (((offset/mWidth) + (extent/2)/mWidth))%5);
-                int actualItem = (((offset)/mWidth) + ((extent+mCellWidth)/2)/mWidth);
                 //Log.i("Centered actual item: ", "" + ((offset/mWidth) + (extent/2)/mWidth));
 
 
@@ -169,6 +171,7 @@ public class ChooseCarActivity extends AppCompatActivity {
 
                     double leftPercent =  (((double)(i+1)*mCellWidth)-((double)offset)) / ((double)extent);
                     double oneHalfImageTileWidth = (((double)mCellWidth)/((double)extent))/2f;
+
                     vh.updateMatrix(leftPercent,oneHalfImageTileWidth);
 
 
