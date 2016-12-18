@@ -38,7 +38,7 @@ public class ChooseCarActivity extends AppCompatActivity {
     private int mOffset;
 
     public static int ManufacturerTile_Width=80;
-    public static int numBrands=0;
+    public static int numBrands;
 
     public enum CarPickerType {
         MANUFACTURER,MODEL
@@ -242,12 +242,10 @@ public class ChooseCarActivity extends AppCompatActivity {
 
     private static class ModelMakeHolder extends RecyclerView.ViewHolder{
 
-        public ImageView image;
+        private ImageView image;
         public TextView textView;
         public Matrix defaultMatrix;
         public DisplayMetrics displayMetrics;
-//        public Space spacer1;
-//        public Space spacer2;
         public FrameLayout layout;
 
         public static float bigFactor = .37f;
@@ -255,12 +253,10 @@ public class ChooseCarActivity extends AppCompatActivity {
 
         public ModelMakeHolder(View itemView, DisplayMetrics displayM) {
             super(itemView);
-            image = (ImageView) itemView.findViewById(R.id.make_model_image);
-            textView = (TextView) itemView.findViewById(R.id.make_model_text);
-            defaultMatrix = image.getImageMatrix();
+            this.image = (ImageView) itemView.findViewById(R.id.make_model_image);
+            this.textView = (TextView) itemView.findViewById(R.id.make_model_text);
+            this.defaultMatrix = image.getImageMatrix();
             this.displayMetrics = displayM;
-//            this.spacer1 = (Space) itemView.findViewById(R.id.space1);
-//            this.spacer2 = (Space) itemView.findViewById(R.id.space2);
             this.layout = (FrameLayout) itemView.findViewById(R.id.brand_holder_layout);
         }
 
@@ -297,10 +293,10 @@ public class ChooseCarActivity extends AppCompatActivity {
                         0, 0, w, 0, w, h, 0, h
                 };
                 float[] dst = {
-                        0 + shrinkFactorSmall*3 , 0 + shrinkFactorBig, //BL
+                        0 + (shrinkFactorSmall*(.11f*shrinkFactorSmall))*3 , 0 + shrinkFactorBig, //BL
                         w, 0 + shrinkFactorSmall, //BR
                         w, h - shrinkFactorSmall, //TR
-                        0 + shrinkFactorSmall*3, h - shrinkFactorBig //TL
+                        0 + (shrinkFactorSmall*(.11f*shrinkFactorSmall))*3, h - shrinkFactorBig //TL
                 };
 
 
@@ -346,10 +342,10 @@ public class ChooseCarActivity extends AppCompatActivity {
                 };
 
                 float[] dst = {
-                        w-shrinkFactorSmall*3, shrinkFactorBig,
+                        w-(shrinkFactorSmall*(.11f*shrinkFactorSmall))*3, shrinkFactorBig,
                         0, shrinkFactorSmall,
                         0, h-shrinkFactorSmall,
-                        w-shrinkFactorSmall*3, h - shrinkFactorBig
+                        w-(shrinkFactorSmall*(.11f*shrinkFactorSmall))*3, h - shrinkFactorBig
                 };
 
 
