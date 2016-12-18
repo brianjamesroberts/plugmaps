@@ -20,8 +20,10 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Space;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -91,38 +93,38 @@ public class ChooseCarActivity extends AppCompatActivity {
         helper.attachToRecyclerView(manufacturerRecycler);
 
 
-        ViewTreeObserver viewTreeObserver = manufacturerRecycler.getViewTreeObserver();
-        if (viewTreeObserver.isAlive()) {
-            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    manufacturerRecycler.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    int viewWidth = manufacturerRecycler.getWidth();
-                    int viewHeight = manufacturerRecycler.getHeight();
-
-
-
-                    Matrix m = new Matrix();
-                    int w = viewWidth;
-                    int h = viewHeight ;
-                    Log.e("Width, height:" , viewWidth + ", "+ viewHeight);
-                    final float DELTAX = w * 0.15f;
-                    float[] src = {
-                            0, 0, w, 0, w, h, 0, h
-                    };
-                    float[] dst = {
-                            0, 0, w, 0, w - DELTAX, h, DELTAX, h
-                    };
-                    m.setSinCos(.5f,1.5f);
-                    //m.setPolyToPoly(src, 0, dst, 0, 4);
-
-                    MyAnimation animation = new MyAnimation(m);
-                    animation.setDuration(0);
-                    animation.setFillAfter(true);
-                    //manufacturerRecycler.setAnimation(animation);
-                }
-            });
-        }
+//        ViewTreeObserver viewTreeObserver = manufacturerRecycler.getViewTreeObserver();
+//        if (viewTreeObserver.isAlive()) {
+//            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//                @Override
+//                public void onGlobalLayout() {
+//                    manufacturerRecycler.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//                    int viewWidth = manufacturerRecycler.getWidth();
+//                    int viewHeight = manufacturerRecycler.getHeight();
+//
+//
+//
+//                    Matrix m = new Matrix();
+//                    int w = viewWidth;
+//                    int h = viewHeight ;
+//                    Log.e("Width, height:" , viewWidth + ", "+ viewHeight);
+//                    final float DELTAX = w * 0.15f;
+//                    float[] src = {
+//                            0, 0, w, 0, w, h, 0, h
+//                    };
+//                    float[] dst = {
+//                            0, 0, w, 0, w - DELTAX, h, DELTAX, h
+//                    };
+//                    m.setSinCos(.5f,1.5f);
+//                    //m.setPolyToPoly(src, 0, dst, 0, 4);
+//
+//                    MyAnimation animation = new MyAnimation(m);
+//                    animation.setDuration(0);
+//                    animation.setFillAfter(true);
+//                    //manufacturerRecycler.setAnimation(animation);
+//                }
+//            });
+//        }
 
         manufacturerRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -135,14 +137,14 @@ public class ChooseCarActivity extends AppCompatActivity {
                 int range = recyclerView.computeHorizontalScrollRange();
 
                 int percentage = (int)(100.0 * offset / (float)(range - extent));
-                Log.e("layoutmanager","children: " + mLLM.findFirstCompletelyVisibleItemPosition());
+//                Log.e("layoutmanager","children: " + mLLM.findFirstCompletelyVisibleItemPosition());
                 int mWidth = mLLM.findViewByPosition(mLLM.findFirstCompletelyVisibleItemPosition()).getWidth();
-                Log.i("RecyclerView", "scroll percentage: "+ percentage + "%");
-                Log.i("REC","offest" + offset);
-                Log.i("REC","extent" + extent);
-                Log.i("REC","range" + range);
+//                Log.i("RecyclerView", "scroll percentage: "+ percentage + "%");
+//                Log.i("REC","offest" + offset);
+//                Log.i("REC","extent" + extent);
+//                Log.i("REC","range" + range);
 //                Log.i("Centered item: ", "Centered item: " + (((offset/mWidth) + (extent/2)/mWidth))%5);
-                int actualItem = ((offset/mWidth) + (extent/2)/mWidth);
+                int actualItem = (((offset)/mWidth) + ((extent+mCellWidth)/2)/mWidth);
                 //Log.i("Centered actual item: ", "" + ((offset/mWidth) + (extent/2)/mWidth));
 
 
@@ -153,21 +155,14 @@ public class ChooseCarActivity extends AppCompatActivity {
 
 
 
-
-
-
-
                 for (int i =  mLLM.findFirstVisibleItemPosition(); i <= mLLM.findLastVisibleItemPosition(); i++){
 
-                    //recyclerView.findViewHolderForAdapterPosition(i).getAdapterPosition();
 
-                    // i is the adapter position
 
 
                     ModelMakeHolder vh = (ModelMakeHolder)recyclerView.findViewHolderForAdapterPosition(i);
 
 
-                    //pos = - BrandTile_extent
 
 
 
@@ -183,9 +178,9 @@ public class ChooseCarActivity extends AppCompatActivity {
                     //vh.updateMatrix(0d,0d);
                     Log.e("Viewholder Pos", "" + i + ": " + vh.getPosition());
 
-                    vh.image.setBackgroundColor(Color.argb(100,0,100,20));
+                    //vh.image.setBackgroundColor(Color.argb(100,0,100,20));
                     if(i==actualItem) {
-                       // vh.image.setBackgroundColor(Color.argb(100,0,100,20));
+                        vh.image.setBackgroundColor(Color.argb(100,0,100,20));
 
 //                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(170, 170);
 //                        vh.image.setLayoutParams(layoutParams);
@@ -202,7 +197,7 @@ public class ChooseCarActivity extends AppCompatActivity {
 //                            matrix.postSkew(-0.5f, 0.5f, 0f, 0f);
 //                            vh.image.setImageMatrix(matrix);
 //                        }
-                        //vh.image.setBackgroundColor(Color.rgb(255,255,255));
+                        vh.image.setBackgroundColor(Color.argb(100,119, 121, 130));
 
 
 //
@@ -237,6 +232,7 @@ public class ChooseCarActivity extends AppCompatActivity {
         private CarPickerType type;
         private RecyclerView recycler;
         DisplayMetrics displayMetrics;
+
 
         public CarAdapter(CarPickerType adapterType, ArrayList<MakeModelData> dat, RecyclerView recyclerView, DisplayMetrics displayMetrics1){
             this.type = adapterType;
@@ -301,6 +297,11 @@ public class ChooseCarActivity extends AppCompatActivity {
         public TextView textView;
         public Matrix defaultMatrix;
         public DisplayMetrics displayMetrics;
+        public Space spacer1;
+        public Space spacer2;
+
+        public static float bigFactor = .37f;
+        public static float smallFactor = .15f;
 
         public ModelMakeHolder(View itemView, DisplayMetrics displayM) {
             super(itemView);
@@ -308,130 +309,137 @@ public class ChooseCarActivity extends AppCompatActivity {
             textView = (TextView) itemView.findViewById(R.id.make_model_text);
             defaultMatrix = image.getImageMatrix();
             this.displayMetrics = displayM;
+            this.spacer1 = (Space) itemView.findViewById(R.id.space1);
+            this.spacer2 = (Space) itemView.findViewById(R.id.space2);
         }
 
         public void updateMatrix(double screenRightPos, double oneViewPercentageHalf){
 
-            Log.e("Updating", "updateMatrix(" + screenRightPos + "), oneVIewPercentageHalf(" + oneViewPercentageHalf + ")");
-            image.setImageMatrix(defaultMatrix);
-            Matrix m = image.getImageMatrix();
-            m.reset();
+          //  Log.e("Updating", "updateMatrix(" + screenRightPos + "), oneVIewPercentageHalf(" + oneViewPercentageHalf + ")");
+           // image.setImageMatrix(defaultMatrix);
+            Matrix m = new Matrix();
+                    // image.getImageMatrix();
+//            m.reset();
 
-            if(screenRightPos < (.40d +  oneViewPercentageHalf)){
+            if(screenRightPos < (.50 +  oneViewPercentageHalf)){
                 //rectangle smaller left side
 
                 //m.preRotate((float)screenRightPos * 1000f);
 
-                double screenLeftPos = screenRightPos - (double) 2*oneViewPercentageHalf;
-                Log.e("Double", "Scren left pos  " + screenLeftPos);
-
-
-                double f = 0.25d;
-                int h2 = 105;
-                double i = oneViewPercentageHalf;
-
-                screenLeftPos = (screenLeftPos + 2d*i)/(.5d + 3d*i);
-                screenRightPos = (screenRightPos + 2d*i)/(.5d + 3d*i);
-
-                float leftFactor = (float)(f * h2 * (1d-screenLeftPos));
-                float rightFactor = (float)(f * h2 * (1d-screenRightPos));
-
-
-
-                float moveInFactor = (float)((1d-(screenLeftPos+i))*f*6d*h2);
-
-
-
-
-
-
-               // Log.e("math","L(0,1) R(0,1) to L(" + bottomLeft + "," + topLeft + ") R(" + bottomRight + ", " + topRight + ")");
-
                 int h = image.getHeight();
                 int w = image.getWidth();
+
+
+
+                double midViewPos = screenRightPos -  oneViewPercentageHalf;
+                double screenLeftFactor = Math.min(1d,midViewPos/(.5d) + oneViewPercentageHalf*2d);
+
+                double screenLeftPos = screenRightPos - ((double) 2)*oneViewPercentageHalf;
+
+
+
+
+                int spacer1Width =Math.max(0,(int)(screenLeftFactor * Constants.dpToInt(17,displayMetrics)));
+
+                int spacer2Width = Constants.dpToInt(34,displayMetrics) - spacer1Width;
+
+//                Log.e("Spacer factor %", "Spacer factor %: " + screenLeftFactor);
+  //              Log.e("Spacer", "Spacer1 width: " + spacer1Width);
+                spacer2.getLayoutParams().width = spacer1Width;
+                spacer1.getLayoutParams().width = spacer2Width;
+
+                spacer2.requestLayout();
+                spacer1.requestLayout();
+                image.requestLayout();
+
+
+
+
+                float shrinkFactorBig = (1f-(float)screenLeftFactor)*bigFactor*h;
+                float shrinkFactorSmall = (1f-(float)screenLeftFactor)*smallFactor*h;
+              //  Log.e("Blah","big,small , width: " + shrinkFactorBig+ ", " + shrinkFactorSmall + ", " + w);
 
                 float[] src = {
                         0, 0, w, 0, w, h, 0, h
                 };
                 float[] dst = {
-                        0 + moveInFactor, 0 + leftFactor, //BL
-                        w, 0 + rightFactor, //BR
-                        w, h - rightFactor, //TR
-                        0 + moveInFactor, h - leftFactor //TL
+                        0 + shrinkFactorSmall*3 , 0 + shrinkFactorBig, //BL
+                        w, 0 + shrinkFactorSmall, //BR
+                        w, h - shrinkFactorSmall, //TR
+                        0 + shrinkFactorSmall*3, h - shrinkFactorBig //TL
                 };
 
-//                for(float fs: src){
-//                    Log.e("logging", "src:" + fs);
-//                }
-//                for(float fs: dst){
-//                    Log.e("logging",  "dst:" + fs);
-//                }
-                //m.setSinCos(.5f,1.5f);
+//                for(float f2 : dst)
+//                    Log.e("dst", "dst: " + f2);
+                //m.reset();
                 m.setPolyToPoly(src, 0, dst, 0, 4);
                 MyAnimation animation = new MyAnimation(m);
                 animation.setDuration(0);
                 animation.setFillAfter(true);
                 image.clearAnimation();
                 image.setAnimation(animation);
-                Log.e("View", "View is on left");
+                //Log.e("View", "View is on left");
                 return;
 
 
 
-            }else if((screenRightPos - oneViewPercentageHalf) > .55d){
+            }else if((screenRightPos - oneViewPercentageHalf) > .50d){
                 //m.preSkew(-.1f,.1f);
                 //m.preRotate((float)screenRightPos * 1000f);
 
                 double screenLeftPos = screenRightPos - (double) 2*oneViewPercentageHalf;
-                Log.e("Double", "Scren left pos  " + screenLeftPos);
-
-
-                double f = 0.25d;
-                int h2 = 105;
-                double i = oneViewPercentageHalf;
-
-                screenLeftPos = (screenLeftPos + i - .5d)/(.5d + 3d*i);
-                screenRightPos = (screenRightPos + i - .5d)/(.5d + 3d*i);
-
-                float leftFactor = (float)(f * h2 * (screenLeftPos));
-                float rightFactor = (float)(f * h2 * (screenRightPos));
+                //Log.e("Double", "Scren left pos  " + screenLeftPos);
 
 
 
-                float moveInFactor = (float)((screenRightPos)*f*3d*h2);
-
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                int margin = Math.abs((int)(30-((rightFactor)/3)*Constants.dpToInt(1,displayMetrics)));
-                Log.e("Margin", "Margin is " + margin);
-                params.setMargins(margin,0,margin,0);
-                image.setLayoutParams(params);
-
-
-
-
-
-                // Log.e("math","L(0,1) R(0,1) to L(" + bottomLeft + "," + topLeft + ") R(" + bottomRight + ", " + topRight + ")");
+                //screenRightPos = (screenRightPos + i - .5d)/(.5d + 3d*i);
 
                 int h = image.getHeight();
                 int w = image.getWidth();
 
+
+                double midViewPos = screenRightPos - oneViewPercentageHalf;
+                //Log.e("mid", "midview pos:" + midViewPos);
+                double screenLeftFactor = Math.min(1d,1-((midViewPos-.5d))/(.5d) + oneViewPercentageHalf*2d);
+
+
+
+
+
+                int spacer1Width =Math.max(0,(int)(screenLeftFactor * Constants.dpToInt(17,displayMetrics)));
+
+
+                int spacer2Width = Constants.dpToInt(34,displayMetrics) - spacer1Width;
+
+//                Log.e("Spacer factor %", "Spacer factor %: " + screenLeftFactor);
+//                Log.e("Spacer", "Spacer1, spacer2 width: " + spacer1Width + ", " + spacer2Width);
+                spacer1.getLayoutParams().width = spacer1Width;
+                spacer2.getLayoutParams().width = spacer2Width;
+
+//                spacer1.getLayoutParams().width = 0;
+//                spacer2.getLayoutParams().width = 0;
+
+                spacer2.requestLayout();
+                spacer1.requestLayout();
+                image.requestLayout();
+
+
+                float shrinkFactorBig = (1f-(float)screenLeftFactor)*bigFactor*h;
+                float shrinkFactorSmall = (1f-(float)screenLeftFactor)*smallFactor*h;
+                //Log.e("Blah","big,small , width: " + shrinkFactorBig+ ", " + shrinkFactorSmall + ", " + w);
+
                 float[] src = {
-                        0, 0, w, 0, w, h, 0, h
-                };
-                float[] dst = {
-                        0 , 0 + leftFactor, //BL
-                        w - moveInFactor, 0 + rightFactor, //BR
-                        w - moveInFactor, h - rightFactor, //TR
-                        0, h - leftFactor //TL
+                         w, 0,0, 0, 0, h,w, h
                 };
 
-//                for(float fs: src){
-//                    Log.e("logging", "src:" + fs);
-//                }
-//                for(float fs: dst){
-//                    Log.e("logging",  "dst:" + fs);
-//                }
-                //m.setSinCos(.5f,1.5f);
+                float[] dst = {
+                        w-shrinkFactorSmall*3, shrinkFactorBig,
+                        0, shrinkFactorSmall,
+                        0, h-shrinkFactorSmall,
+                        w-shrinkFactorSmall*3, h - shrinkFactorBig
+                };
+
+
                 m.setPolyToPoly(src, 0, dst, 0, 4);
                 MyAnimation animation = new MyAnimation(m);
                 animation.setDuration(0);
@@ -439,16 +447,20 @@ public class ChooseCarActivity extends AppCompatActivity {
                 image.clearAnimation();
                 image.setAnimation(animation);
 
-
                 //we're to the left of middle
-                Log.e("View", "View is on right");
+                //Log.e("View", "View is on right");
                 return;
             }else{
                 image.setImageMatrix(defaultMatrix);
                 m = image.getImageMatrix();
                 m.reset();
-                image.setImageMatrix(m);
+                image.setImageMatrix(new Matrix());
+                image.requestLayout();
 
+                spacer1.getLayoutParams().width = Constants.dpToInt(17,displayMetrics);
+                spacer2.getLayoutParams().width = Constants.dpToInt(17,displayMetrics);
+                spacer1.requestLayout();
+                spacer2.requestLayout();
                 //dead center, do nothing.
                 Log.e("View", "View is in MIDDLE!!!)");
             }
