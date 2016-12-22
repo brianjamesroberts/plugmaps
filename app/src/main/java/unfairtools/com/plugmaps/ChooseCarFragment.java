@@ -2,11 +2,10 @@ package unfairtools.com.plugmaps;
 
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.support.v7.app.AppCompatActivity;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
@@ -17,80 +16,102 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Space;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class ChooseCarActivity extends AppCompatActivity {
+import unfairtools.com.plugmaps.Constants.Constants;
 
 
-    Repository repository;
-    private int mScreenWidth;
-    private int mCellWidth;
-    private int mOffset;
-
-    public static int ManufacturerTile_Width=80;
+/**
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link ChooseCarFragment.OnFragmentInteractionListener} interface
+ * to handle interaction events.
+ * Use the {@link ChooseCarFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class ChooseCarFragment extends Fragment {
     public static int numBrands;
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
-    public enum CarPickerType {
-        MANUFACTURER,MODEL
+
+    private OnFragmentInteractionListener mListener;
+
+    public ChooseCarFragment() {
+        // Required empty public constructor
     }
 
-    public static class MyAnimation extends Animation {
-        private Matrix matrix;
-
-        public MyAnimation(Matrix matrix) {
-            this.matrix = matrix;
-        }
-
-        @Override
-        protected void applyTransformation(float interpolatedTime, Transformation t) {
-            super.applyTransformation(interpolatedTime, t);
-            t.getMatrix().set(matrix);
-        }
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment ChooseCarFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static ChooseCarFragment newInstance(String param1, String param2) {
+        ChooseCarFragment fragment = new ChooseCarFragment();
+//        Bundle args = new Bundle();
+//        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_choose_car);
+//        if (getArguments() != null) {
+//        }
+    }
+
+
+    private int mScreenWidth;
+    private int mCellWidth;
+    //privatevalues int mOffset;
+
+    //**    Constants
+    private final static int mManufacturerTile_Width = 80;
+    //**  ^ Constants ^
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+
+        View view = inflater.inflate(R.layout.fragment_choose_car, container, false);
 
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
-        this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        this.getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         this.mScreenWidth = displaymetrics.widthPixels;
 
 
-        mCellWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ManufacturerTile_Width, getResources()
+        mCellWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mManufacturerTile_Width, getResources()
                 .getDisplayMetrics());
 
-        mOffset = (this.mScreenWidth / 2) - (mCellWidth / 2);
+        //mOffset = (this.mScreenWidth / 2) - (mCellWidth / 2);
 
 
         Log.e("SW","Screen width is " +  mScreenWidth);
-        Repository repository = new Repository(this.getApplication());
+        Repository repository = new Repository(this.getActivity().getApplication());
 
 
 
-
-        final RecyclerView manufacturerRecycler =(RecyclerView) findViewById(R.id.manufacturer_recycler);
+        final RecyclerView manufacturerRecycler = (RecyclerView) view.findViewById(R.id.manufacturer_recycler);
 
 
 
         //TODO: Implement this bad boy!
-        RecyclerView makeRecycler = (RecyclerView) findViewById(R.id.make_recycler);
+        RecyclerView makeRecycler = (RecyclerView) view.findViewById(R.id.make_recycler);
 
-        final LinearLayoutManager mLLM = new LinearLayoutManager(getApplication(),LinearLayoutManager.HORIZONTAL,false);
+        final LinearLayoutManager mLLM = new LinearLayoutManager(getActivity().getApplication(),LinearLayoutManager.HORIZONTAL,false);
         manufacturerRecycler.setLayoutManager(mLLM);
-        manufacturerRecycler.setAdapter(new ChooseCarActivity.CarAdapter(CarPickerType.MANUFACTURER, repository.getModelData(CarPickerType.MANUFACTURER), manufacturerRecycler, getResources().getDisplayMetrics()));
+        manufacturerRecycler.setAdapter(new ChooseCarFragment.CarAdapter(CarPickerType.MANUFACTURER, repository.getModelData(CarPickerType.MANUFACTURER), manufacturerRecycler, getResources().getDisplayMetrics()));
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(manufacturerRecycler);
 
@@ -159,7 +180,7 @@ public class ChooseCarActivity extends AppCompatActivity {
 
                     //Log.e("Viewholder Pos", "" + i + ": " + vh.getPosition());
 
-                    ModelMakeHolder vh = (ModelMakeHolder)recyclerView.findViewHolderForAdapterPosition(i);
+                    ChooseCarFragment.ModelMakeHolder vh = (ChooseCarFragment.ModelMakeHolder)recyclerView.findViewHolderForAdapterPosition(i);
 
                     double leftPercent =  (((double)(i+1)*mCellWidth)-((double)offset)) / ((double)extent);
                     double oneHalfImageTileWidth = (((double)mCellWidth)/((double)extent))/2f;
@@ -177,15 +198,20 @@ public class ChooseCarActivity extends AppCompatActivity {
             }
         });
 
+
+        return view;
+    }
+
+    public enum CarPickerType {
+        MANUFACTURER,MODEL
     }
 
     public static class MakeModelData{
         public Drawable img;
         public String stringInfo;
-
     }
 
-    private static class CarAdapter extends RecyclerView.Adapter<ModelMakeHolder>{
+    private static class CarAdapter extends RecyclerView.Adapter<ChooseCarFragment.ModelMakeHolder>{
 
         private ArrayList<MakeModelData> data;
         private CarPickerType type;
@@ -202,18 +228,18 @@ public class ChooseCarActivity extends AppCompatActivity {
         }
 
         @Override
-        public ModelMakeHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ChooseCarFragment.ModelMakeHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.car_image_text_tile, parent, false);
 
-            ChooseCarActivity.ModelMakeHolder imageTile = new ChooseCarActivity.ModelMakeHolder(view,displayMetrics);
+            ChooseCarFragment.ModelMakeHolder imageTile = new ChooseCarFragment.ModelMakeHolder(view,displayMetrics);
             return imageTile;
         }
 
 
 
         @Override
-        public void onBindViewHolder(ModelMakeHolder holder, int position) {
+        public void onBindViewHolder(ChooseCarFragment.ModelMakeHolder holder, int position) {
 
             holder.image.setImageDrawable(data.get(position).img);
             holder.textView.setText(data.get(position).stringInfo);
@@ -262,7 +288,7 @@ public class ChooseCarActivity extends AppCompatActivity {
 
         public void updateMatrix(double screenRightPos, double oneViewPercentageHalf){
 
-          //  Log.e("Updating", "updateMatrix(" + screenRightPos + "), oneViewPercentageHalf(" + oneViewPercentageHalf + ")");
+            //  Log.e("Updating", "updateMatrix(" + screenRightPos + "), oneViewPercentageHalf(" + oneViewPercentageHalf + ")");
 
 
             Matrix m = new Matrix();
@@ -338,7 +364,7 @@ public class ChooseCarActivity extends AppCompatActivity {
                 float shrinkFactorSmall = (1f-(float)screenLeftFactor)*smallFactor*h;
 
                 float[] src = {
-                         w, 0,0, 0, 0, h,w, h
+                        w, 0,0, 0, 0, h,w, h
                 };
 
                 float[] dst = {
@@ -375,12 +401,49 @@ public class ChooseCarActivity extends AppCompatActivity {
 
             //causes console warning... maybe add an onLayoutChangedListener and update from there?
             image.requestLayout();
+//
         }
 
 
 
 
 
+    }
+
+
+
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+    }
+
+
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
+    }
+
+    public static class MyAnimation extends Animation {
+        private Matrix matrix;
+
+        public MyAnimation(Matrix matrix) {
+            this.matrix = matrix;
+        }
+
+        @Override
+        protected void applyTransformation(float interpolatedTime, Transformation t) {
+            super.applyTransformation(interpolatedTime, t);
+            t.getMatrix().set(matrix);
+        }
     }
 
 }

@@ -16,13 +16,13 @@ public class Repository {
         this.context = ctx;
     }
 
-    public ArrayList<ChooseCarActivity.MakeModelData> getModelData(ChooseCarActivity.CarPickerType carPickerType) {
-        ArrayList<ChooseCarActivity.MakeModelData> data = new ArrayList<ChooseCarActivity.MakeModelData>();
+    public ArrayList<ChooseCarFragment.MakeModelData> getModelData(ChooseCarFragment.CarPickerType carPickerType) {
+        ArrayList<ChooseCarFragment.MakeModelData> data = new ArrayList<ChooseCarFragment.MakeModelData>();
         switch (carPickerType) {
             case MANUFACTURER:
-                ChooseCarActivity.numBrands=50;
+                ChooseCarFragment.numBrands=50;
                 for (int i = 0; i < 50; i++) {
-                    ChooseCarActivity.MakeModelData mData = new ChooseCarActivity.MakeModelData();
+                    ChooseCarFragment.MakeModelData mData = new ChooseCarFragment.MakeModelData();
                     mData.img = context.getResources().getDrawable(R.drawable.ic_airplane);
 
                     if (i%5== 0) {

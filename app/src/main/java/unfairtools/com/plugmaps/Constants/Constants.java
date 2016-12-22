@@ -1,4 +1,4 @@
-package unfairtools.com.plugmaps;
+package unfairtools.com.plugmaps.Constants;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
@@ -8,6 +8,7 @@ import android.util.DisplayMetrics;
  */
 public class Constants {
     public final static int CarHolderWidth = 80;
+
 
     public static int dpToInt(int dp, DisplayMetrics displayMetrics){
         return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
