@@ -109,9 +109,12 @@ public class ChooseCarFragment extends Fragment {
         //TODO: Implement this bad boy!
         RecyclerView makeRecycler = (RecyclerView) view.findViewById(R.id.make_recycler);
 
+
+
+
         final LinearLayoutManager mLLM = new LinearLayoutManager(getActivity().getApplication(),LinearLayoutManager.HORIZONTAL,false);
         manufacturerRecycler.setLayoutManager(mLLM);
-        manufacturerRecycler.setAdapter(new ChooseCarFragment.CarAdapter(CarPickerType.MANUFACTURER, repository.getModelData(CarPickerType.MANUFACTURER), manufacturerRecycler, getResources().getDisplayMetrics()));
+        manufacturerRecycler.setAdapter(new ChooseCarFragment.CarAdapter(mLLM,CarPickerType.MANUFACTURER, repository.getModelData(CarPickerType.MANUFACTURER), manufacturerRecycler, getResources().getDisplayMetrics()));
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(manufacturerRecycler);
 
@@ -217,13 +220,16 @@ public class ChooseCarFragment extends Fragment {
         private CarPickerType type;
         private RecyclerView recycler;
         DisplayMetrics displayMetrics;
+        private LinearLayoutManager linearLayoutManager;
 
 
-        public CarAdapter(CarPickerType adapterType, ArrayList<MakeModelData> dat, RecyclerView recyclerView, DisplayMetrics displayMetrics1){
+
+        public CarAdapter(LinearLayoutManager llm, CarPickerType adapterType, ArrayList<MakeModelData> dat, RecyclerView recyclerView, DisplayMetrics displayMetrics1){
             this.type = adapterType;
             this.data = dat;
             this.recycler = recyclerView;
             this.displayMetrics = displayMetrics1;
+            this.linearLayoutManager = llm;
 
         }
 
@@ -232,7 +238,7 @@ public class ChooseCarFragment extends Fragment {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.car_image_text_tile, parent, false);
 
-            ChooseCarFragment.ModelMakeHolder imageTile = new ChooseCarFragment.ModelMakeHolder(view,displayMetrics);
+            ChooseCarFragment.ModelMakeHolder imageTile = new ChooseCarFragment.ModelMakeHolder(view,displayMetrics, recycler);
             return imageTile;
         }
 
@@ -252,9 +258,18 @@ public class ChooseCarFragment extends Fragment {
                 public void onClick(View view) {
                     Log.e("Click","CLICK" + (int)view.getTag() + " offset ; " +(recycler.getWidth()));
                     Log.e("Width", "Width/2: " + Constants.dpToInt(Constants.CarHolderWidth/2,displayMetrics)*2);
+                    int pos = (recycler.getWidth())/2 - Constants.dpToInt(Constants.CarHolderWidth,displayMetrics)/2;
+
                     ((LinearLayoutManager)recycler.getLayoutManager()).
                             scrollToPositionWithOffset((int)view.getTag(),
-                                    (recycler.getWidth())/2 - Constants.dpToInt(Constants.CarHolderWidth,displayMetrics)/2);
+                                    pos);
+
+                    for(int i = linearLayoutManager.findFirstCompletelyVisibleItemPosition(); i <= linearLayoutManager.findLastVisibleItemPosition(); i++){
+                        //ModelMakeHolder mmh =
+                        ((ModelMakeHolder)recycler.getChildViewHolder(linearLayoutManager.findViewByPosition(i))).updateMatrix(.5f);
+                                //linearLayoutManager.findViewByPosition(i)
+                    }
+
                 }
             });
         }
@@ -273,23 +288,32 @@ public class ChooseCarFragment extends Fragment {
         public Matrix defaultMatrix;
         public DisplayMetrics displayMetrics;
         public FrameLayout layout;
+        public RecyclerView rv;
 
         public static float bigFactor = .37f;
         public static float smallFactor = .15f;
 
-        public ModelMakeHolder(View itemView, DisplayMetrics displayM) {
+        private double oneHalfView = 0.0f;
+
+        public ModelMakeHolder(View itemView, DisplayMetrics displayM, RecyclerView recycler) {
             super(itemView);
             this.image = (ImageView) itemView.findViewById(R.id.make_model_image);
             this.textView = (TextView) itemView.findViewById(R.id.make_model_text);
             this.defaultMatrix = image.getImageMatrix();
             this.displayMetrics = displayM;
             this.layout = (FrameLayout) itemView.findViewById(R.id.brand_holder_layout);
+            this.rv = recycler;
+        }
+
+        public void updateMatrix(double screenRightPos){
+            updateMatrix(screenRightPos, oneHalfView);
         }
 
         public void updateMatrix(double screenRightPos, double oneViewPercentageHalf){
 
             //  Log.e("Updating", "updateMatrix(" + screenRightPos + "), oneViewPercentageHalf(" + oneViewPercentageHalf + ")");
 
+            oneHalfView = oneViewPercentageHalf;
 
             Matrix m = new Matrix();
             if(screenRightPos < (.50 +  oneViewPercentageHalf)){
@@ -401,6 +425,9 @@ public class ChooseCarFragment extends Fragment {
 
             //causes console warning... maybe add an onLayoutChangedListener and update from there?
             image.requestLayout();
+            layout.requestLayout();
+            //rv.requestLayout();
+
 //
         }
 

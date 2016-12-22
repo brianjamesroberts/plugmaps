@@ -23,8 +23,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import unfairtools.com.plugmaps.Constants.Constants;
-import unfairtools.com.plugmaps.Constants.PrivateConstants;
-
 //import android.support.v4.app.FragmentManager;
 
 
@@ -43,7 +41,7 @@ public class MapFragment extends SupportMapFragment {
 //    @Inject
 //    ApiService apiService;
 
-    private String map_api_key = PrivateConstants.Google_Map_Key;
+//    private String map_api_key = PrivateConstants.Google_Map_Key;
 
     // TODO: Rename and change types of parameters
 
