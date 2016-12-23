@@ -265,9 +265,7 @@ public class ChooseCarFragment extends Fragment {
                                     pos);
 
                     for(int i = linearLayoutManager.findFirstCompletelyVisibleItemPosition(); i <= linearLayoutManager.findLastVisibleItemPosition(); i++){
-                        //ModelMakeHolder mmh =
                         ((ModelMakeHolder)recycler.getChildViewHolder(linearLayoutManager.findViewByPosition(i))).updateMatrix(.5f);
-                                //linearLayoutManager.findViewByPosition(i)
                     }
 
                 }
@@ -425,7 +423,7 @@ public class ChooseCarFragment extends Fragment {
 
             //causes console warning... maybe add an onLayoutChangedListener and update from there?
             image.requestLayout();
-            layout.requestLayout();
+            //layout.requestLayout();
             //rv.requestLayout();
 
 //
