@@ -22,7 +22,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import unfairtools.com.plugmaps.Constants.Constants;
+import unfairtools.com.plugmaps.UI.MainActivity;
 //import android.support.v4.app.FragmentManager;
 
 

@@ -7,7 +7,7 @@ package unfairtools.com.plugmaps.Dagger.Component;
 
 import dagger.Component;
 import unfairtools.com.plugmaps.Dagger.Module.SQLiteModule;
-import unfairtools.com.plugmaps.MainActivity;
+import unfairtools.com.plugmaps.UI.MainActivity;
 import unfairtools.com.plugmaps.Presenters.MapsPresenter;
 
 

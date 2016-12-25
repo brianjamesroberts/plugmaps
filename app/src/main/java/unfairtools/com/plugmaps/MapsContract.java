@@ -1,15 +1,7 @@
 package unfairtools.com.plugmaps;
 
-import android.app.FragmentManager;
-
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-
-import java.util.List;
-
 import unfairtools.com.plugmaps.Base.BasePresenter;
 import unfairtools.com.plugmaps.Base.BaseView;
-import unfairtools.com.plugmaps.MainActivity;
 
 /**
  * Created by brianroberts on 12/22/16.

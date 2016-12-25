@@ -23,7 +23,7 @@ public class Repository {
                 ChooseCarFragment.numBrands=50;
                 for (int i = 0; i < 50; i++) {
                     ChooseCarFragment.MakeModelData mData = new ChooseCarFragment.MakeModelData();
-                    mData.img = context.getResources().getDrawable(R.drawable.ic_airplane);
+                  //  mData.img = context.getResources().getDrawable(R.drawable.ic_airplane);
 
                     if (i%5== 0) {
                         mData.stringInfo = "Tesla ";
