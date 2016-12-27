@@ -53,6 +53,8 @@ public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarker
 
     private volatile int showId = -1;
 
+
+
     public MapsPresenter(MapsContract.View v, BaseApplication b) {
         view = v;
         baseApp = b;
@@ -78,7 +80,7 @@ public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarker
 
 
     public void takeMap(GoogleMap gm) {
-//        googleMap = gm;
+          this.googleMap = gm;
 //
 //        googleMap.setOnMarkerClickListener(this);
 //

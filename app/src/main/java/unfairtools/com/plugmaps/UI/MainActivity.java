@@ -1,5 +1,6 @@
 package unfairtools.com.plugmaps.UI;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -10,17 +11,27 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AutoCompleteTextView;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import unfairtools.com.plugmaps.ChooseCarFragment;
 import unfairtools.com.plugmaps.MapFragment;
 import unfairtools.com.plugmaps.R;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+
+    private Toolbar toolbar;
+    private ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +130,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+
+    public ImageButton getClearTextButton(){
+        return (ImageButton)findViewById(R.id.toolbar_x_button);
+    }
+
+    public void hideKeyboard(){
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    public RecyclerView getToolbarRecyclerView(){
+        return (RecyclerView)findViewById(R.id.toolbar_recycler_view_tiles);
+    }
+
+    public TextView getToolbarDisplayOnlyEditText(){
+        return (TextView)findViewById(R.id.toolbar_display_only_text);
+    }
+
+
+    public AutoCompleteTextView getToolbarEditText(){
+        return (AutoCompleteTextView)toolbar.findViewById(R.id.main_search_bar);
+    }
+
+    public FrameLayout getToolbarFrameLayout(){
+        return (FrameLayout) findViewById(R.id.searchbar_framelayout);
+    }
+
+    public void setToggleHamburgerVisibility(boolean visible){
+        if(visible) {
+            toggle.setDrawerArrowDrawable(toggle.getDrawerArrowDrawable());
+        }
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
