@@ -17,7 +17,6 @@ import unfairtools.com.plugmaps.Dagger.Module.SQLiteModule;
         private ServicesComponent servicesComponent;
 
 
-
         public void onCreate(){
             servicesComponent =
                     DaggerServicesComponent.builder()

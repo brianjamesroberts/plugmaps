@@ -25,9 +25,10 @@ public class MapPresenterModule {
             Log.e("We", "WERE HERE, making mapPresenterMOdule");
         }
 
-        @Provides
-        MapsPresenter provideMapsPresenter() {
-            return new MapsPresenter(view, base);
-        }
+    @Provides
+    MapsPresenter providePresenter() {
+        Log.e("Providing mapsPresenter", "Providing mapsPresetner");
+        return new MapsPresenter(view,base);
+    }
 
     }

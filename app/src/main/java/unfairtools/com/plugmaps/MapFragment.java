@@ -29,13 +29,6 @@ public class MapFragment extends SupportMapFragment implements MapsContract.View
     // TODO: Rename parameter arguments, choose names that match
 
 
-    //@Inject
-    //public MapsPresenter presenter;
-
-    @Inject
-    SQLiteDatabase db;
-
-
 //    private OnFragmentInteractionListener mListener;
 
 
@@ -77,28 +70,14 @@ public class MapFragment extends SupportMapFragment implements MapsContract.View
         Log.e("Dxxxxxxxxxxxxxxx", "Creating MapFragment");
 
 
-        MapPresenterComponent m = DaggerMapPresenterComponent.builder()
-                .mapPresenterModule(new MapPresenterModule(this,(BaseApplication)getActivity().getApplication()))
-                .build();
-
-        //mapsPresenter = new MapsPresenter(this,(BaseApplication)getActivity().getApplication());
-        m.inject(this);
-
-
-
 //
-//        DaggerMapPresenterComponent.builder()
-//                .mapPresenterModule(new MapPresenterModule(this, (BaseApplication)getActivity().getApplication()))
-//                .build()
-//                .inject(this);
+//        DaggerMapPresenterComponent.create().inject(this);
+        DaggerMapPresenterComponent.builder()
+                .mapPresenterModule(new MapPresenterModule(this, (BaseApplication)getActivity().getApplication()))
+                .build()
+                .inject(this);
 
-//        DaggerMapsComponent.builder()
-//                .mapsModule(new MapsModule(this,(BaseApplication)getActivity().getApplication()))
-//                //.realmModule(new RealmModule((BaseApplication)getActivity().getApplication()))
-//                .build()
-//                .inject(this);
-//
-//        presenter.log("fragment created");
+        Log.e("Map", "Map frag done creating");
 
 
 
