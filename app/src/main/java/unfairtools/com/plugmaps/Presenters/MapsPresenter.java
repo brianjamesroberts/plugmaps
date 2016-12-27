@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -29,6 +30,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import unfairtools.com.plugmaps.Base.BaseApplication;
 import unfairtools.com.plugmaps.MapsContract;
+import unfairtools.com.plugmaps.Repository;
 
 /**
  * Created by brianroberts on 10/26/16.
@@ -39,6 +41,9 @@ public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarker
 
     @Inject
     SQLiteDatabase db;
+
+    @Inject
+    Repository repository;
 
 //    @Inject
 //    ApiService apiService;
@@ -53,13 +58,27 @@ public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarker
 
     private volatile int showId = -1;
 
-
+    public void receivePoints(HashSet<MarkerOptions> mMarkersHashSet){
+        Log.e("Receive points", "Receive pints rec'vd from repo");
+    }
 
     public MapsPresenter(MapsContract.View v, BaseApplication b) {
         view = v;
         baseApp = b;
+
+        Log.e("New", "New MapsPresenter!!!!!");
+
         //icon = BitmapDescriptorFactory.fromResource(R.mipmap.ic_map_marker);
+
+
         b.getServicesComponent().inject(this);
+
+
+        Log.e("Repo is", repository.toString());
+        repository.registerPresenter(0,this);
+
+        repository.getPoints();
+
     }
 
     public void sendMapTo(double lat, double longitude) {

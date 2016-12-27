@@ -1,5 +1,6 @@
 package unfairtools.com.plugmaps;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
@@ -24,6 +25,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
+import unfairtools.com.plugmaps.Base.BaseApplication;
 import unfairtools.com.plugmaps.Constants.Constants;
 
 
@@ -63,6 +67,7 @@ public class ChooseCarFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +83,16 @@ public class ChooseCarFragment extends Fragment {
     //**    Constants
     private final static int mManufacturerTile_Width = 80;
     //**  ^ Constants ^
+
+
+    //Todo: Move injection to the presenter layer
+
+    @Inject
+    Repository repository;
+
+    @Inject
+    SQLiteDatabase db;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -90,6 +105,9 @@ public class ChooseCarFragment extends Fragment {
         this.getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         this.mScreenWidth = displaymetrics.widthPixels;
 
+        ((BaseApplication)getActivity().getApplication()).getServicesComponent().inject(this);
+
+
 
         mCellWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mManufacturerTile_Width, getResources()
                 .getDisplayMetrics());
@@ -98,7 +116,7 @@ public class ChooseCarFragment extends Fragment {
 
 
         Log.e("SW","Screen width is " +  mScreenWidth);
-        Repository repository = new Repository(this.getActivity().getApplication());
+        //Repository repository = new Repository(this.getActivity().getApplication());
 
 
 

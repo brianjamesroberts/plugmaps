@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,23 +13,21 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-//import com.unfairtools.campsites.base.BaseApplication;
-//import com.unfairtools.campsites.contracts.unfairtools.com.plugmaps.MapsContract;
-//import com.unfairtools.campsites.dagger.component.DaggerMapsComponent;
-//import com.unfairtools.campsites.dagger.module.MapsModule;
-//import com.unfairtools.campsites.presenters.MapsPresenter;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import unfairtools.com.plugmaps.Base.BaseApplication;
+import unfairtools.com.plugmaps.Dagger.Component.DaggerMapPresenterComponent;
+import unfairtools.com.plugmaps.Dagger.Component.MapPresenterComponent;
+import unfairtools.com.plugmaps.Dagger.Module.MapPresenterModule;
+import unfairtools.com.plugmaps.Presenters.MapsPresenter;
 import unfairtools.com.plugmaps.UI.MainActivity;
-//import android.support.v4.app.FragmentManager;
 
 
-public class MapFragment extends SupportMapFragment {
-    //implements
-//} unfairtools.com.plugmaps.MapsContract.View {
+public class MapFragment extends SupportMapFragment implements MapsContract.View {
+
     // TODO: Rename parameter arguments, choose names that match
 
 
@@ -38,14 +37,8 @@ public class MapFragment extends SupportMapFragment {
     @Inject
     SQLiteDatabase db;
 
-//    @Inject
-//    ApiService apiService;
 
-//    private String map_api_key = PrivateConstants.Google_Map_Key;
-
-    // TODO: Rename and change types of parameters
-
-    private OnFragmentInteractionListener mListener;
+//    private OnFragmentInteractionListener mListener;
 
 
     public MainActivity getMainActivity(){
@@ -68,16 +61,13 @@ public class MapFragment extends SupportMapFragment {
         // Required empty public constructor
     }
 
-//    public static MapFragment newInstance(String param1, String param2) {
-//        MapFragment fragment = new MapFragment();
-//        Bundle args = new Bundle();
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
+//
+    @Inject
+    MapsPresenter mapsPresenter;
 
-//    public void setListeners(){
-//        this.getMap().setBuildingsEnabled(true);
-//    }
+    public static MapFragment newInstance(){
+        return new MapFragment();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,6 +76,21 @@ public class MapFragment extends SupportMapFragment {
         if (getArguments() != null) {
         }
 
+        Log.e("Dxxxxxxxxxxxxxxx", "Creating MapFragment");
+
+
+        MapPresenterComponent m = DaggerMapPresenterComponent.builder()
+                .mapPresenterModule(new MapPresenterModule(this,(BaseApplication)getActivity().getApplication()))
+                .build();
+        m.inject(this);
+
+
+
+//
+//        DaggerMapPresenterComponent.builder()
+//                .mapPresenterModule(new MapPresenterModule(this, (BaseApplication)getActivity().getApplication()))
+//                .build()
+//                .inject(this);
 
 //        DaggerMapsComponent.builder()
 //                .mapsModule(new MapsModule(this,(BaseApplication)getActivity().getApplication()))
@@ -105,14 +110,16 @@ public class MapFragment extends SupportMapFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        OnMapReadyCallback cb = new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-               // presenter.takeMap(googleMap);
-            }
-        };
+        Log.e("Dxxxxxxxxxxxxxxx", "Creating MapFragment view");
 
-        super.getMapAsync(cb);
+//        OnMapReadyCallback cb = new OnMapReadyCallback() {
+//            @Override
+//            public void onMapReady(GoogleMap googleMap) {
+//               // presenter.takeMap(googleMap);
+//            }
+//        };
+
+        //super.getMapAsync(cb);
 
         View viewMain = super.onCreateView(inflater, container, savedInstanceState);
 
@@ -124,22 +131,22 @@ public class MapFragment extends SupportMapFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+//        if (context instanceof OnFragmentInteractionListener) {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+//        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+//        mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
+//    public interface OnFragmentInteractionListener {
+//        // TODO: Update argument type and name
+//        void onFragmentInteraction(Uri uri);
+//    }
 }

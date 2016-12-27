@@ -1,5 +1,9 @@
 package unfairtools.com.plugmaps;
 
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.HashSet;
+
 import unfairtools.com.plugmaps.Base.BasePresenter;
 import unfairtools.com.plugmaps.Base.BaseView;
 
@@ -21,12 +25,12 @@ public interface MapsContract {
 
     }
 
-    interface MarkerInfoView extends BaseView<MarkerInfoPresenter> {
-        //MainActivity getMainActivity();
-    }
-
-    interface MarkerInfoPresenter extends BasePresenter {
-    }
+//    interface MarkerInfoView extends BaseView<MarkerInfoPresenter> {
+//        //MainActivity getMainActivity();
+//    }
+//
+//    interface MarkerInfoPresenter extends BasePresenter {
+//    }
 
     interface Presenter extends BasePresenter {
 
@@ -35,6 +39,7 @@ public interface MapsContract {
 //        void takeMap(GoogleMap gm);
 //        void initZoom();
 //        void initPoints();
+        void receivePoints(HashSet<MarkerOptions> markerOptions);
 //        void showInfo(SupportMapFragment mapFragment);
 //        boolean showMarkerTag(int id);
 //        void setShowTagId(int id);

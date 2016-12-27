@@ -4,6 +4,7 @@ import android.app.Application;
 
 import unfairtools.com.plugmaps.Dagger.Component.DaggerServicesComponent;
 import unfairtools.com.plugmaps.Dagger.Component.ServicesComponent;
+import unfairtools.com.plugmaps.Dagger.Module.RepoModule;
 import unfairtools.com.plugmaps.Dagger.Module.SQLiteModule;
 
 /**
@@ -21,6 +22,7 @@ import unfairtools.com.plugmaps.Dagger.Module.SQLiteModule;
             servicesComponent =
                     DaggerServicesComponent.builder()
                             .sQLiteModule(new SQLiteModule(this))
+                            .repoModule(new RepoModule(this))
                             .build();
         }
 
