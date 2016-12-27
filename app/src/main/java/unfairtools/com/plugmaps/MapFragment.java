@@ -10,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import java.util.List;
@@ -82,6 +80,8 @@ public class MapFragment extends SupportMapFragment implements MapsContract.View
         MapPresenterComponent m = DaggerMapPresenterComponent.builder()
                 .mapPresenterModule(new MapPresenterModule(this,(BaseApplication)getActivity().getApplication()))
                 .build();
+
+        //mapsPresenter = new MapsPresenter(this,(BaseApplication)getActivity().getApplication());
         m.inject(this);
 
 

@@ -26,7 +26,7 @@ public class MapPresenterModule {
         }
 
         @Provides
-        MapsPresenter providePresenter() {
+        MapsPresenter provideMapsPresenter() {
             return new MapsPresenter(view, base);
         }
 
