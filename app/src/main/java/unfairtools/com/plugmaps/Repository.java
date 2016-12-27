@@ -1,8 +1,10 @@
 package unfairtools.com.plugmaps;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 
 import java.util.ArrayList;
+import java.util.WeakHashMap;
 
 /**
  * Created by brianroberts on 12/13/16.
@@ -10,11 +12,21 @@ import java.util.ArrayList;
 public class Repository {
 
 
+
+    private WeakHashMap<Integer, Fragment> fragmentsMap;
+    //TODO: inject this class into each presenter w/ dagger 12/26/16
+
+
     Context context;
     public Repository(Context ctx){
-
         this.context = ctx;
+        fragmentsMap = new WeakHashMap<Integer, Fragment>();
     }
+
+    public void registerFragment(int mCode, Fragment mFrag){
+        fragmentsMap.put(mCode, mFrag);
+    }
+
 
     public ArrayList<ChooseCarFragment.MakeModelData> getModelData(ChooseCarFragment.CarPickerType carPickerType) {
         ArrayList<ChooseCarFragment.MakeModelData> data = new ArrayList<ChooseCarFragment.MakeModelData>();
