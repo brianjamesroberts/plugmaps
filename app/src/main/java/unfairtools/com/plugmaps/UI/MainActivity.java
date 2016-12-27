@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Fragment mapFragment = getSupportFragmentManager().findFragmentById(R.id.activity_main_map_frame);
         if(mapFragment == null){
-            mapFragment = unfairtools.com.plugmaps.MapFragment.newInstance();
+            mapFragment = unfairtools.com.plugmaps.MapFragment.newInstanceCustom();
         }
 
 

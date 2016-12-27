@@ -39,11 +39,11 @@ import unfairtools.com.plugmaps.Repository;
 public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarkerClickListener {
 
 
-    @Inject
-    SQLiteDatabase db;
-
-    @Inject
-    Repository repository;
+//    @Inject
+//    SQLiteDatabase db;
+//
+//    @Inject
+//    Repository repository;
 
 //    @Inject
 //    ApiService apiService;
@@ -69,15 +69,15 @@ public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarker
         Log.e("New", "New MapsPresenter!!!!!");
 
         //icon = BitmapDescriptorFactory.fromResource(R.mipmap.ic_map_marker);
-
-
-        b.getServicesComponent().inject(this);
-
-
-        Log.e("Repo is", repository.toString());
-        repository.registerPresenter(0,this);
-
-        repository.getPoints();
+//
+//
+//        b.getServicesComponent().inject(this);
+//
+//
+//        Log.e("Repo is", repository.toString());
+//        repository.registerPresenter(0,this);
+//
+//        repository.getPoints();
 
     }
 

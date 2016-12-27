@@ -54,9 +54,9 @@ public class MapFragment extends SupportMapFragment implements MapsContract.View
 
 //
     @Inject
-    MapsPresenter mapsPresenter;
+    public MapsPresenter mapsPresenter;
 
-    public static MapFragment newInstance(){
+    public static MapFragment newInstanceCustom(){
         return new MapFragment();
     }
 
@@ -76,6 +76,8 @@ public class MapFragment extends SupportMapFragment implements MapsContract.View
                 .mapPresenterModule(new MapPresenterModule(this, (BaseApplication)getActivity().getApplication()))
                 .build()
                 .inject(this);
+
+        mapsPresenter.initZoom();
 
         Log.e("Map", "Map frag done creating");
 

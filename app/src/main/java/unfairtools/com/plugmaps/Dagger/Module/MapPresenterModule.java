@@ -1,5 +1,7 @@
 package unfairtools.com.plugmaps.Dagger.Module;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import dagger.Module;
@@ -15,20 +17,18 @@ import unfairtools.com.plugmaps.Presenters.MapsPresenter;
 @Module
 public class MapPresenterModule {
 
+    private MapsContract.View view;
+    private BaseApplication base;
 
-        private MapsContract.View view;
-        private BaseApplication base;
-
-        public MapPresenterModule(MapsContract.View v, BaseApplication b) {
-            this.view = v;
-            this.base = b;
-            Log.e("We", "WERE HERE, making mapPresenterMOdule");
-        }
+    public MapPresenterModule(MapsContract.View v, BaseApplication b) {
+        view = v;
+        base = b;
+    }
 
     @Provides
     MapsPresenter providePresenter() {
-        Log.e("Providing mapsPresenter", "Providing mapsPresetner");
         return new MapsPresenter(view,base);
     }
+
 
     }
