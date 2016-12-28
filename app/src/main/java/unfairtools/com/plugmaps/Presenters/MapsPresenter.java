@@ -84,6 +84,9 @@ public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarker
 
         //map.add(mMarkers all)
 
+        for(MarkerOptions m: mMarkersHashMap.keySet())
+            googleMap.addMarker(m);
+
         markerOptionsMap.putAll(mMarkersHashMap);
 
 
@@ -91,6 +94,7 @@ public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarker
     }
 
     public MapsPresenter(BaseApplication baseApplication){
+        markerOptionsMap = new HashMap<MarkerOptions, MarkerInfo>();
         baseApplication.getServicesComponent().inject(this);
     }
 
@@ -110,11 +114,13 @@ public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarker
 
     }
 
-    ;
+
 
 
     public void takeMap(GoogleMap gm) {
           this.googleMap = gm;
+        repository.getPoints(googleMap.getProjection().getVisibleRegion().latLngBounds);
+
 //
 //        googleMap.setOnMarkerClickListener(this);
 //

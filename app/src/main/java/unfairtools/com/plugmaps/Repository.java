@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -32,14 +34,27 @@ public class Repository {
 
     }
 
-    public void getPoints(){
+    public void getPoints(LatLngBounds latLngBounds){
         Log.e("Get points received", "get pts receigved");
-        sendPoints();
+
+
+        MarkerInfo inf = new MarkerInfo();
+        inf.name = "Tesla Supercharger";
+        inf.latLng = new LatLng(48.0356029d,-123.42074d);
+        inf.outletTypes = new ArrayList<MarkerInfo.OutletType>();
+        inf.adapterTypes = new ArrayList<MarkerInfo.AdapterType>();
+        inf.id = 0;
+        MarkerOptions mm = new MarkerOptions().position(inf.latLng).title(inf.name);
+
+        HashMap<MarkerOptions,MarkerInfo> markerOptionsMarkerInfoHashMap = new HashMap<>();
+        markerOptionsMarkerInfoHashMap.put(mm,inf);
+
+        sendPoints(markerOptionsMarkerInfoHashMap);
     }
 
 
-    public void sendPoints(){
-        ((MapsContract.Presenter)presenterMap.get(0)).receivePoints(new HashMap<MarkerOptions, MarkerInfo>());
+    public void sendPoints(HashMap<MarkerOptions,MarkerInfo> hashMap){
+        ((MapsContract.Presenter)presenterMap.get(0)).receivePoints(hashMap);
     }
 
     public static Repository newInstance(Context c){
