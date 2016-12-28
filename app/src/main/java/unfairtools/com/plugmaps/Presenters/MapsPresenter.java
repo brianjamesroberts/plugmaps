@@ -30,6 +30,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import unfairtools.com.plugmaps.Base.BaseApplication;
 import unfairtools.com.plugmaps.MapsContract;
+import unfairtools.com.plugmaps.MarkerInfo;
 import unfairtools.com.plugmaps.Repository;
 
 /**
@@ -39,18 +40,14 @@ import unfairtools.com.plugmaps.Repository;
 public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarkerClickListener {
 
 
-//    @Inject
-//    SQLiteDatabase db;
-//
-//    @Inject
-//    Repository repository;
 
-//    @Inject
-//    ApiService apiService;
+    @Inject
+    public SQLiteDatabase db;
 
-    BaseApplication baseApp;
+    @Inject
+    public Repository repository;
 
-    MapsContract.View view;
+
 
     private GoogleMap googleMap;
 
@@ -58,28 +55,46 @@ public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarker
 
     private volatile int showId = -1;
 
-    public void receivePoints(HashSet<MarkerOptions> mMarkersHashSet){
-        Log.e("Receive points", "Receive pints rec'vd from repo");
+    MapsContract.View mapFragment;
+
+    /*
+     * Must be called every time a map fragment when it calls onResume();
+     * Call deregisterMapFragment when finished.
+     */
+    public void registerMapFragment(MapsContract.View v){
+        this.mapFragment = v;
+        repository.registerPresenter(0,this);
     }
 
-    public MapsPresenter(MapsContract.View v, BaseApplication b) {
-        view = v;
-        baseApp = b;
+    /*
+     Call deregisterMapFragment when map fragment calls onPause();
+     */
+    public void deregisterMapFragment(MapsContract.View v){
+        this.mapFragment = v;
+        repository.deregisterPresenter(0);
 
-        Log.e("New", "New MapsPresenter!!!!!");
-
-        //icon = BitmapDescriptorFactory.fromResource(R.mipmap.ic_map_marker);
-//
-//
-//        b.getServicesComponent().inject(this);
-//
-//
-//        Log.e("Repo is", repository.toString());
-//        repository.registerPresenter(0,this);
-//
-//        repository.getPoints();
 
     }
+
+    HashMap<MarkerOptions,MarkerInfo> markerOptionsMap;
+
+    public void receivePoints(HashMap<MarkerOptions, MarkerInfo> mMarkersHashMap){
+        for(MarkerOptions m: markerOptionsMap.keySet())
+            mMarkersHashMap.remove(m);
+
+        //map.add(mMarkers all)
+
+        markerOptionsMap.putAll(mMarkersHashMap);
+
+
+
+    }
+
+    public MapsPresenter(BaseApplication baseApplication){
+        baseApplication.getServicesComponent().inject(this);
+    }
+
+
 
     public void sendMapTo(double lat, double longitude) {
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, longitude), 9.0f));

@@ -7,6 +7,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.WeakHashMap;
 
@@ -28,16 +29,17 @@ public class Repository {
     private Repository(Context ctx){
         this.context = ctx;
         presenterMap = new WeakHashMap<Integer, BasePresenter>();
+
     }
 
     public void getPoints(){
         Log.e("Get points received", "get pts receigved");
         sendPoints();
-//        System.exit(0);
     }
 
+
     public void sendPoints(){
-        ((MapsContract.Presenter)presenterMap.get(0)).receivePoints(new HashSet<MarkerOptions>());
+        ((MapsContract.Presenter)presenterMap.get(0)).receivePoints(new HashMap<MarkerOptions, MarkerInfo>());
     }
 
     public static Repository newInstance(Context c){
@@ -45,7 +47,13 @@ public class Repository {
     }
 
     public void registerPresenter(int mCode, BasePresenter mFrag){
+        Log.e("Registering", "Registered: Presenter code " + mCode);
         presenterMap.put(mCode, mFrag);
+    }
+
+    public void deregisterPresenter(int mCode){
+        Log.e("Deregistering", "Deregistered: Presenter code " + mCode);
+        presenterMap.remove(mCode);
     }
 
 

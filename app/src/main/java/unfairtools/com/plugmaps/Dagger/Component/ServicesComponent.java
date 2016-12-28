@@ -11,6 +11,7 @@ import unfairtools.com.plugmaps.Dagger.Module.MapPresenterModule;
 import unfairtools.com.plugmaps.Dagger.Module.RepoModule;
 import unfairtools.com.plugmaps.Dagger.Module.SQLiteModule;
 import unfairtools.com.plugmaps.MapFragment;
+import unfairtools.com.plugmaps.Repository;
 import unfairtools.com.plugmaps.UI.MainActivity;
 import unfairtools.com.plugmaps.Presenters.MapsPresenter;
 
@@ -20,19 +21,26 @@ import javax.inject.Singleton;
 @Component(modules = {
         SQLiteModule.class,
         RepoModule.class,
+        MapPresenterModule.class
 })
 
 @Singleton
 public interface ServicesComponent {
+    //TODO: kill this
     void inject(MainActivity presenter);
-    void inject(MapsPresenter presenter);
 
-    //Todo: move all injection into only presenter layers
+    //TODO: kill this
     void inject(ChooseCarFragment fragment);
 
-//    void inject(MarkerInfoFragmentPresenter presenter);
-//    void inject(MarkerInfoCardAdapter adapter);
-//    void inject(LoginManager loginManager);
+    //inject presenter
+    void inject(MapFragment fragment);
+
+    //inject repo
+    void inject(MapsPresenter presenter);
+
+    //inject sqliteDB
+    void inject(Repository repository);
+
 
 
 }

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 import unfairtools.com.plugmaps.Base.BaseApplication;
@@ -17,17 +19,22 @@ import unfairtools.com.plugmaps.Presenters.MapsPresenter;
 @Module
 public class MapPresenterModule {
 
-    private MapsContract.View view;
+//    private MapsContract.View view;
     private BaseApplication base;
 
-    public MapPresenterModule(MapsContract.View v, BaseApplication b) {
-        view = v;
-        base = b;
+//    public MapPresenterModule(MapsContract.View v, BaseApplication b) {
+//        view = v;
+//        base = b;
+//    }
+
+    public MapPresenterModule(BaseApplication baseApplication) {
+        this.base = baseApplication;
     }
 
     @Provides
+    @Singleton
     MapsPresenter providePresenter() {
-        return new MapsPresenter(view,base);
+        return new MapsPresenter(base);
     }
 
 

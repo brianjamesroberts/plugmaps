@@ -10,27 +10,45 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import unfairtools.com.plugmaps.Base.BaseApplication;
-import unfairtools.com.plugmaps.Dagger.Component.DaggerMapPresenterComponent;
-import unfairtools.com.plugmaps.Dagger.Component.MapPresenterComponent;
-import unfairtools.com.plugmaps.Dagger.Module.MapPresenterModule;
 import unfairtools.com.plugmaps.Presenters.MapsPresenter;
 import unfairtools.com.plugmaps.UI.MainActivity;
 
 
 public class MapFragment extends SupportMapFragment implements MapsContract.View {
 
-    // TODO: Rename parameter arguments, choose names that match
+    @Inject
+    public MapsPresenter mapsPresenter;
 
 
-//    private OnFragmentInteractionListener mListener;
+    @Override
+    public void onPause(){
+        mapsPresenter.deregisterMapFragment(this);
+        super.onPause();
+    }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+        mapsPresenter.registerMapFragment(this);
+    }
+
+    public void addMarkers(HashMap<MarkerOptions,MarkerInfo> optionsHashMap){
+        for(MarkerOptions m : optionsHashMap.keySet()){
+            //
+        }
+    }
 
     public MainActivity getMainActivity(){
         return (MainActivity)getActivity();
@@ -44,17 +62,12 @@ public class MapFragment extends SupportMapFragment implements MapsContract.View
 
     }
 
-    public void placePoints(List<Integer> points){
-
-    }
 
     public MapFragment() {
         // Required empty public constructor
     }
 
-//
-    @Inject
-    public MapsPresenter mapsPresenter;
+
 
     public static MapFragment newInstanceCustom(){
         return new MapFragment();
@@ -67,19 +80,9 @@ public class MapFragment extends SupportMapFragment implements MapsContract.View
         if (getArguments() != null) {
         }
 
-        Log.e("Dxxxxxxxxxxxxxxx", "Creating MapFragment");
 
-
-//
-//        DaggerMapPresenterComponent.create().inject(this);
-        DaggerMapPresenterComponent.builder()
-                .mapPresenterModule(new MapPresenterModule(this, (BaseApplication)getActivity().getApplication()))
-                .build()
-                .inject(this);
-
+        ((BaseApplication)getActivity().getApplication()).getServicesComponent().inject(this);
         mapsPresenter.initZoom();
-
-        Log.e("Map", "Map frag done creating");
 
 
 
@@ -93,14 +96,14 @@ public class MapFragment extends SupportMapFragment implements MapsContract.View
 
         Log.e("Dxxxxxxxxxxxxxxx", "Creating MapFragment view");
 
-//        OnMapReadyCallback cb = new OnMapReadyCallback() {
-//            @Override
-//            public void onMapReady(GoogleMap googleMap) {
-//               // presenter.takeMap(googleMap);
-//            }
-//        };
+        OnMapReadyCallback cb = new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                mapsPresenter.takeMap(googleMap);
+            }
+        };
 
-        //super.getMapAsync(cb);
+        super.getMapAsync(cb);
 
         View viewMain = super.onCreateView(inflater, container, savedInstanceState);
 
