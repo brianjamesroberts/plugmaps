@@ -1,35 +1,22 @@
 package unfairtools.com.plugmaps.Presenters;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.Gson;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.inject.Inject;
 
-import retrofit2.Call;
-import retrofit2.Callback;
 import unfairtools.com.plugmaps.Base.BaseApplication;
-import unfairtools.com.plugmaps.MapsContract;
+import unfairtools.com.plugmaps.Contracts.MapsContract;
 import unfairtools.com.plugmaps.MarkerInfo;
 import unfairtools.com.plugmaps.Repository;
 
@@ -63,7 +50,7 @@ public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarker
      */
     public void registerMapFragment(MapsContract.View v){
         this.mapFragment = v;
-        repository.registerPresenter(0,this);
+        repository.registerPresenter(Repository.PresenterType.MAPS_PRESENTER,this);
     }
 
     /*
@@ -71,30 +58,38 @@ public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarker
      */
     public void deregisterMapFragment(MapsContract.View v){
         this.mapFragment = v;
-        repository.deregisterPresenter(0);
+        repository.deregisterPresenter(Repository.PresenterType.MAPS_PRESENTER);
 
 
     }
 
-    HashMap<MarkerOptions,MarkerInfo> markerOptionsMap;
+    HashMap<MarkerInfo,MarkerOptions> markerOptionsMap;
 
-    public void receivePoints(HashMap<MarkerOptions, MarkerInfo> mMarkersHashMap){
-        for(MarkerOptions m: markerOptionsMap.keySet())
+    public void receivePoints(HashMap<MarkerInfo,MarkerOptions> mMarkersHashMap){
+        for(MarkerInfo m: markerOptionsMap.keySet()) {
+            Log.e("MapsPresenter", "Already have " + m.name);
             mMarkersHashMap.remove(m);
 
-        //map.add(mMarkers all)
+        }
 
-        for(MarkerOptions m: mMarkersHashMap.keySet())
-            googleMap.addMarker(m);
+
+        for(MarkerInfo m: mMarkersHashMap.keySet()) {
+            googleMap.addMarker(mMarkersHashMap.get(m));
+            Log.e("Adding", "MAPPresenter: Adding " + m.name);
+        }
 
         markerOptionsMap.putAll(mMarkersHashMap);
+
+        for(MarkerInfo m: markerOptionsMap.keySet()) {
+            Log.e("Adding", "HOLDING CURRENT: MAPPresenter: Adding " + m.name);
+        }
 
 
 
     }
 
     public MapsPresenter(BaseApplication baseApplication){
-        markerOptionsMap = new HashMap<MarkerOptions, MarkerInfo>();
+        markerOptionsMap = new HashMap<MarkerInfo,MarkerOptions>();
         baseApplication.getServicesComponent().inject(this);
     }
 
@@ -114,13 +109,16 @@ public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarker
 
     }
 
+    private void fillPoints(){
+        repository.getPoints(googleMap.getProjection().getVisibleRegion().latLngBounds);
+    }
 
 
 
     public void takeMap(GoogleMap gm) {
-          this.googleMap = gm;
-        repository.getPoints(googleMap.getProjection().getVisibleRegion().latLngBounds);
 
+        this.googleMap = gm;
+        //this.fillPoints();
 //
 //        googleMap.setOnMarkerClickListener(this);
 //
@@ -164,14 +162,12 @@ public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarker
 //        //6.833f = zoom default
 //
 //
-//        gm.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-//            @Override
-//            public void onCameraIdle() {
-//
-//                SQLMethods.setMapPrefs(db,googleMap.getCameraPosition().target, googleMap.getCameraPosition().zoom);
-//                initPoints();
-//            }
-//        });
+        this.googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                MapsPresenter.this.fillPoints();
+            }
+        });
 //
 //        gm.moveCamera(CameraUpdateFactory.newLatLngZoom(lat2,zoom));
 //

@@ -42,6 +42,13 @@
             android:id="@+id/toolbar_x_button"
             android:visibility="gone"/>
 
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="@drawable/ic_filter"
+            android:id="@+id/toolbar_filter_button" />
+
     </LinearLayout>
 
 

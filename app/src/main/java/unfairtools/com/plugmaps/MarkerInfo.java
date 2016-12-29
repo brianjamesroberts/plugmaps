@@ -24,4 +24,30 @@ public class MarkerInfo {
     public ArrayList<AdapterType> adapterTypes;
     public int id;
 
+    @Override
+    public int hashCode(){
+        return this.id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!MarkerInfo.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+        final MarkerInfo other = (MarkerInfo) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        if(other.latLng!=null){
+            if(this.latLng!=null){
+                if(!other.latLng.equals(this.latLng))
+                    return false;
+            }
+        }
+        return true;
+    }
+
 }

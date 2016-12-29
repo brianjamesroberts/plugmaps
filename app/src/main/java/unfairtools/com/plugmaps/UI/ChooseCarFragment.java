@@ -1,4 +1,4 @@
-package unfairtools.com.plugmaps;
+package unfairtools.com.plugmaps.UI;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -29,6 +29,8 @@ import javax.inject.Inject;
 
 import unfairtools.com.plugmaps.Base.BaseApplication;
 import unfairtools.com.plugmaps.Constants.Constants;
+import unfairtools.com.plugmaps.R;
+import unfairtools.com.plugmaps.Repository;
 
 
 /**

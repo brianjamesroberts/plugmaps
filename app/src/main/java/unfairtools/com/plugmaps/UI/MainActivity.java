@@ -23,20 +23,30 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import unfairtools.com.plugmaps.ChooseCarFragment;
-import unfairtools.com.plugmaps.MapFragment;
+import javax.inject.Inject;
+
+import unfairtools.com.plugmaps.Base.BaseApplication;
+import unfairtools.com.plugmaps.Contracts.MainActivityContract;
+import unfairtools.com.plugmaps.UI.MapFragment;
+import unfairtools.com.plugmaps.Presenters.MainActivityPresenter;
 import unfairtools.com.plugmaps.R;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainActivityContract.View {
 
 
     private Toolbar toolbar;
     private ActionBarDrawerToggle toggle;
 
+
+    @Inject
+    MainActivityPresenter presenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ((BaseApplication)getApplication()).getServicesComponent().inject(this);
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.map_cointainer);
         if(fragment == null){
@@ -53,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Fragment mapFragment = getSupportFragmentManager().findFragmentById(R.id.activity_main_map_frame);
         if(mapFragment == null){
-            mapFragment = unfairtools.com.plugmaps.MapFragment.newInstanceCustom();
+            mapFragment = MapFragment.newInstanceCustom();
         }
 
 
@@ -166,6 +176,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             toggle.setDrawerArrowDrawable(toggle.getDrawerArrowDrawable());
         }
     }
+
+    @Override
+    public void onPause(){
+        presenter.deregisterMainActivityPresenter(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        presenter.registerMainActivityPresenter(this);
+    }
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

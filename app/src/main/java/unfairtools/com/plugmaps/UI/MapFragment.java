@@ -1,9 +1,7 @@
-package unfairtools.com.plugmaps;
+package unfairtools.com.plugmaps.UI;
 
 import android.app.FragmentManager;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,12 +14,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import unfairtools.com.plugmaps.Base.BaseApplication;
+import unfairtools.com.plugmaps.Contracts.MapsContract;
+import unfairtools.com.plugmaps.MarkerInfo;
 import unfairtools.com.plugmaps.Presenters.MapsPresenter;
 import unfairtools.com.plugmaps.UI.MainActivity;
 
@@ -44,10 +42,10 @@ public class MapFragment extends SupportMapFragment implements MapsContract.View
         mapsPresenter.registerMapFragment(this);
     }
 
-    public void addMarkers(HashMap<MarkerOptions,MarkerInfo> optionsHashMap){
-        for(MarkerOptions m : optionsHashMap.keySet()){
-            //
-        }
+    public void addMarkers(HashMap<MarkerInfo,MarkerOptions> optionsHashMap){
+//        for(MarkerOptions m : optionsHashMap.keySet()){
+//            //
+//        }
     }
 
     public MainActivity getMainActivity(){

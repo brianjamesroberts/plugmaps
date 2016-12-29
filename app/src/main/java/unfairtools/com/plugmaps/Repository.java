@@ -1,7 +1,6 @@
 package unfairtools.com.plugmaps;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -10,11 +9,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.WeakHashMap;
 
 import unfairtools.com.plugmaps.Base.BasePresenter;
-import unfairtools.com.plugmaps.Presenters.MapsPresenter;
+import unfairtools.com.plugmaps.Contracts.MapsContract;
+import unfairtools.com.plugmaps.UI.ChooseCarFragment;
 
 /**
  * Created by brianroberts on 12/13/16.
@@ -27,6 +26,10 @@ public class Repository {
 
 
     Context context;
+
+    public enum PresenterType{
+        MAPS_PRESENTER, MAIN_ACTIVITY_PRESENTER
+    }
 
     private Repository(Context ctx){
         this.context = ctx;
@@ -46,14 +49,14 @@ public class Repository {
         inf.id = 0;
         MarkerOptions mm = new MarkerOptions().position(inf.latLng).title(inf.name);
 
-        HashMap<MarkerOptions,MarkerInfo> markerOptionsMarkerInfoHashMap = new HashMap<>();
-        markerOptionsMarkerInfoHashMap.put(mm,inf);
+        HashMap<MarkerInfo,MarkerOptions> markerOptionsMarkerInfoHashMap = new HashMap<>();
+        markerOptionsMarkerInfoHashMap.put(inf,mm);
 
         sendPoints(markerOptionsMarkerInfoHashMap);
     }
 
 
-    public void sendPoints(HashMap<MarkerOptions,MarkerInfo> hashMap){
+    public void sendPoints(HashMap<MarkerInfo,MarkerOptions> hashMap){
         ((MapsContract.Presenter)presenterMap.get(0)).receivePoints(hashMap);
     }
 
@@ -61,12 +64,14 @@ public class Repository {
         return new Repository(c);
     }
 
-    public void registerPresenter(int mCode, BasePresenter mFrag){
+    public void registerPresenter(PresenterType mCode, BasePresenter mFrag){
         Log.e("Registering", "Registered: Presenter code " + mCode);
-        presenterMap.put(mCode, mFrag);
+
+        presenterMap.put(mCode.ordinal(), mFrag);
+
     }
 
-    public void deregisterPresenter(int mCode){
+    public void deregisterPresenter(PresenterType mCode){
         Log.e("Deregistering", "Deregistered: Presenter code " + mCode);
         presenterMap.remove(mCode);
     }
