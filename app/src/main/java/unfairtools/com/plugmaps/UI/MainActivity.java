@@ -48,17 +48,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         ((BaseApplication)getApplication()).getServicesComponent().inject(this);
 
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.map_cointainer);
-        if(fragment == null){
-            fragment = ChooseCarFragment.newInstance("","");
-        }
-
-
-        if(!fragment.isAdded()) {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.add(R.id.map_cointainer,fragment);
-            fragmentTransaction.commit();
-        }
+//        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.map_cointainer);
+//        if(fragment == null){
+//            fragment = ChooseCarFragment.newInstance("","");
+//        }
+//
+//
+//        if(!fragment.isAdded()) {
+//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//            fragmentTransaction.add(R.id.map_cointainer,fragment);
+//            fragmentTransaction.commit();
+//        }
 
 
         Fragment mapFragment = getSupportFragmentManager().findFragmentById(R.id.activity_main_map_frame);
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         toolbar.findViewById(R.id.toolbar_display_only_text).setVisibility(View.GONE);
-        toolbar.findViewById(R.id.toolbar_recycler_view_tiles).setVisibility(View.GONE);
+        //toolbar.findViewById(R.id.toolbar_recycler_view_tiles).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_x_button).setBackgroundResource(R.drawable.ic_close_black);
         toolbar.findViewById(R.id.toolbar_x_button).setOnClickListener(new View.OnClickListener(){
 
@@ -154,9 +154,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    public RecyclerView getToolbarRecyclerView(){
-        return (RecyclerView)findViewById(R.id.toolbar_recycler_view_tiles);
-    }
+//    public RecyclerView getToolbarRecyclerView(){
+//        return (RecyclerView)findViewById(R.id.toolbar_recycler_view_tiles);
+//    }
 
     public TextView getToolbarDisplayOnlyEditText(){
         return (TextView)findViewById(R.id.toolbar_display_only_text);

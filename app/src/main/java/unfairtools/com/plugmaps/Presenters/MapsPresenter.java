@@ -85,7 +85,6 @@ public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarker
         }
 
 
-
     }
 
     public MapsPresenter(BaseApplication baseApplication){

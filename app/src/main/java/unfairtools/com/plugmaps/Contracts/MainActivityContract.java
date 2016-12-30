@@ -15,20 +15,11 @@ import unfairtools.com.plugmaps.UI.MainActivity;
 
 public interface MainActivityContract {
 
-
     interface View extends BaseView<MainActivityContract.Presenter> {
-
     }
 
-
     interface Presenter extends BasePresenter {
-
-
         void registerMainActivityPresenter(MainActivityContract.View v);
         void deregisterMainActivityPresenter(MainActivityContract.View v);
-
-
-
-
     }
 }
