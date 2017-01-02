@@ -1,5 +1,7 @@
 package unfairtools.com.plugmaps.Presenters;
 
+import android.util.Log;
+
 import javax.inject.Inject;
 
 import unfairtools.com.plugmaps.Base.BaseApplication;
@@ -28,6 +30,9 @@ public class MainActivityPresenter implements MainActivityContract.Presenter{
     }
 
 
+    public void filterPageSelectorClicked(){
+        Log.e("MainActivityPresenter", "FilterPageSelectorClicked");
+    }
 
     public void registerMainActivityPresenter(MainActivityContract.View v){
         this.mainActivity = v;

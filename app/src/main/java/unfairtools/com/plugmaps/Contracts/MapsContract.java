@@ -1,5 +1,7 @@
 package unfairtools.com.plugmaps.Contracts;
 
+import android.content.Context;
+
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
@@ -25,6 +27,7 @@ public interface MapsContract {
 //        FragmentManager getFragmentManager2();
 
         void addMarkers(HashMap<MarkerInfo,MarkerOptions> markerOptionsHashMap);
+        Context getContext();
 
     }
 
@@ -43,7 +46,7 @@ public interface MapsContract {
 //        void takeMap(GoogleMap gm);
 //        void initZoom();
 //        void initPoints();
-        void deregisterMapFragment(MapsContract.View v);
+        void deregisterMapFragment();
         void registerMapFragment(MapsContract.View v);
         void receivePoints(HashMap<MarkerInfo,MarkerOptions> markerOptions);
 //        void showInfo(SupportMapFragment mapFragment);

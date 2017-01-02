@@ -1,10 +1,16 @@
 package unfairtools.com.plugmaps.Presenters;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
+import android.location.LocationManager;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -56,14 +62,22 @@ public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarker
     /*
      Call deregisterMapFragment when map fragment calls onPause();
      */
-    public void deregisterMapFragment(MapsContract.View v){
-        this.mapFragment = v;
+    public void deregisterMapFragment(){
+        this.mapFragment = null;
+        this.googleMap = null;
         repository.deregisterPresenter(Repository.PresenterType.MAPS_PRESENTER);
-
 
     }
 
     HashMap<MarkerInfo,MarkerOptions> markerOptionsMap;
+
+
+
+    public void gpsClicked(){
+
+        Log.e("")
+
+    }
 
     public void receivePoints(HashMap<MarkerInfo,MarkerOptions> mMarkersHashMap){
         for(MarkerInfo m: markerOptionsMap.keySet()) {
@@ -117,6 +131,13 @@ public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarker
     public void takeMap(GoogleMap gm) {
 
         this.googleMap = gm;
+        if (ContextCompat.checkSelfPermission(mapFragment.getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            this.googleMap.setMyLocationEnabled(true);
+        } else {
+            // Show rationale and request permission.
+        }
+
         //this.fillPoints();
 //
 //        googleMap.setOnMarkerClickListener(this);

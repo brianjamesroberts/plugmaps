@@ -27,6 +27,7 @@ import javax.inject.Inject;
 
 import unfairtools.com.plugmaps.Base.BaseApplication;
 import unfairtools.com.plugmaps.Contracts.MainActivityContract;
+import unfairtools.com.plugmaps.Presenters.MapsPresenter;
 import unfairtools.com.plugmaps.UI.MapFragment;
 import unfairtools.com.plugmaps.Presenters.MainActivityPresenter;
 import unfairtools.com.plugmaps.R;
@@ -40,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Inject
     MainActivityPresenter presenter;
+
+    @Inject
+    MapsPresenter mapsPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,10 +79,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
 
+
+
         ((FloatingActionButton)findViewById(R.id.fab)).setOnClickListener(new FloatingActionButton.OnClickListener(){
             public void onClick(View v){
 
-                Log.e("MainActivity", "CLICK");
+                Log.e("MainActivity", "GPS clicked");
+
+                mapsPresenter.gpsClicked();
 
             }
         });
@@ -91,6 +99,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         toolbar.addView(mCustomView);
+
+        ((ImageButton)mCustomView.findViewById(R.id.toolbar_filter_button)).setOnClickListener(new ImageButton.OnClickListener(){
+            public void onClick(View v){
+                presenter.filterPageSelectorClicked();
+            }
+        });
 
         setSupportActionBar(toolbar);
 

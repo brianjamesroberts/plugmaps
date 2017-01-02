@@ -66,9 +66,7 @@ public class Repository {
 
     public void registerPresenter(PresenterType mCode, BasePresenter mFrag){
         Log.e("Registering", "Registered: Presenter code " + mCode);
-
         presenterMap.put(mCode.ordinal(), mFrag);
-
     }
 
     public void deregisterPresenter(PresenterType mCode){

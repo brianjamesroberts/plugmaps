@@ -32,7 +32,7 @@ public class MapFragment extends SupportMapFragment implements MapsContract.View
 
     @Override
     public void onPause(){
-        mapsPresenter.deregisterMapFragment(this);
+        mapsPresenter.deregisterMapFragment();
         super.onPause();
     }
 
@@ -65,6 +65,9 @@ public class MapFragment extends SupportMapFragment implements MapsContract.View
         // Required empty public constructor
     }
 
+    public Context getContext(){
+        return getActivity().getApplicationContext();
+    }
 
 
     public static MapFragment newInstanceCustom(){
