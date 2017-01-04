@@ -7,8 +7,8 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".Base.BaseApplication"
@@ -18,13 +18,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         >
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyD6sLyBm3w2IYZfgEq7aRn8sQWTpnu3ze4"/>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyD6sLyBm3w2IYZfgEq7aRn8sQWTpnu3ze4" />
+
         <activity android:name=".UI.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".UI.CarChooserActivity">
         </activity>
     </application>
 

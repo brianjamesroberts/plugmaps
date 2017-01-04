@@ -38,7 +38,7 @@ public class Repository {
     }
 
     public void getPoints(LatLngBounds latLngBounds){
-        Log.e("Get points received", "get pts receigved");
+        Log.e("Get points received", "get pts received");
 
 
         MarkerInfo inf = new MarkerInfo();
@@ -74,6 +74,47 @@ public class Repository {
         presenterMap.remove(mCode);
     }
 
+
+    public ArrayList<ChooseCarFragment.ModelDetail> getModelDetailData(String model){
+        ArrayList<ChooseCarFragment.ModelDetail> list = new ArrayList<>();
+        switch(model){
+            case "Tesla":
+                ChooseCarFragment.ModelDetail md = new ChooseCarFragment.ModelDetail();
+                md.brandText = "";
+                md.carMakeText = "spacer";
+                md.imageResource = 0;
+                md.setAnimation = false;
+                list.add(md);
+                md = new ChooseCarFragment.ModelDetail();
+                md.brandText = "Tesla";
+                md.carMakeText = "Model S";
+                md.imageResource = R.drawable.ic_tesla_model_s;
+                md.setAnimation = true;
+                list.add(md);
+                md = new ChooseCarFragment.ModelDetail();
+                md.brandText = "Tesla";
+                md.carMakeText = "Model X";
+                md.imageResource = R.drawable.ic_tesla_model_s;
+                md.setAnimation = false;
+                list.add(md);
+                md = new ChooseCarFragment.ModelDetail();
+                md.brandText = "Tesla";
+                md.carMakeText = "Model 3";
+                md.imageResource = R.drawable.ic_tesla_model_s;
+                md.setAnimation = false;
+                list.add(md);
+                md = new ChooseCarFragment.ModelDetail();
+                md.brandText = "";
+                md.carMakeText = "spacer";
+                md.imageResource = 0;
+                md.setAnimation = false;
+                list.add(md);
+                break;
+            default:
+                break;
+        }
+        return list;
+    }
 
     public ArrayList<ChooseCarFragment.MakeModelData> getModelData(ChooseCarFragment.CarPickerType carPickerType) {
         ArrayList<ChooseCarFragment.MakeModelData> data = new ArrayList<ChooseCarFragment.MakeModelData>();

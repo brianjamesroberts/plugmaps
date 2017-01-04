@@ -75,7 +75,7 @@ public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarker
 
     public void gpsClicked(){
 
-        Log.e("")
+        Log.e("MapsPresenter", "GPS clicked");
 
     }
 

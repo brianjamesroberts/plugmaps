@@ -1,5 +1,6 @@
 package unfairtools.com.plugmaps.UI;
 
+import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -17,18 +18,21 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
 
 import unfairtools.com.plugmaps.Base.BaseApplication;
 import unfairtools.com.plugmaps.Constants.Constants;
+import unfairtools.com.plugmaps.Presenters.MainActivityPresenter;
 import unfairtools.com.plugmaps.R;
 import unfairtools.com.plugmaps.Repository;
 
@@ -95,6 +99,9 @@ public class ChooseCarFragment extends Fragment {
     @Inject
     SQLiteDatabase db;
 
+    @Inject
+    MainActivityPresenter mainPresenter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -135,45 +142,20 @@ public class ChooseCarFragment extends Fragment {
         final LinearLayoutManager mLLM = new LinearLayoutManager(getActivity().getApplication(),LinearLayoutManager.HORIZONTAL,false);
         manufacturerRecycler.setLayoutManager(mLLM);
         manufacturerRecycler.setAdapter(new ChooseCarFragment.CarAdapter(mLLM,CarPickerType.MANUFACTURER, repository.getModelData(CarPickerType.MANUFACTURER), manufacturerRecycler, getResources().getDisplayMetrics()));
+
+
+        final LinearLayoutManager mLLM2 = new LinearLayoutManager(getActivity().getApplication(),LinearLayoutManager.HORIZONTAL,false);
+        makeRecycler.setLayoutManager(mLLM2);
+        makeRecycler.setAdapter(new CarDetailAdapter(mainPresenter.getMainActivity(),mLLM2,CarPickerType.MODEL, repository.getModelDetailData("Tesla"),makeRecycler,getResources().getDisplayMetrics()));
+
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(manufacturerRecycler);
 
+        SnapHelper helper2 = new LinearSnapHelper();
+        helper2.attachToRecyclerView(makeRecycler);
 
 
-        //this commented section skews the entire recyclerview's screen with setPolyToPoly call on Matrix
 
-//        ViewTreeObserver viewTreeObserver = manufacturerRecycler.getViewTreeObserver();
-//        if (viewTreeObserver.isAlive()) {
-//            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//                @Override
-//                public void onGlobalLayout() {
-//                    manufacturerRecycler.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-//                    int viewWidth = manufacturerRecycler.getWidth();
-//                    int viewHeight = manufacturerRecycler.getHeight();
-//
-//
-//
-//                    Matrix m = new Matrix();
-//                    int w = viewWidth;
-//                    int h = viewHeight ;
-//                    Log.e("Width, height:" , viewWidth + ", "+ viewHeight);
-//                    final float DELTAX = w * 0.15f;
-//                    float[] src = {
-//                            0, 0, w, 0, w, h, 0, h
-//                    };
-//                    float[] dst = {
-//                            0, 0, w, 0, w - DELTAX, h, DELTAX, h
-//                    };
-//                    //m.setSinCos(.5f,1.5f);
-//                    m.setPolyToPoly(src, 0, dst, 0, 4);
-//
-//                    MyAnimation animation = new MyAnimation(m);
-//                    animation.setDuration(0);
-//                    animation.setFillAfter(true);
-//                    manufacturerRecycler.setAnimation(animation);
-//                }
-//            });
-//        }
 
         manufacturerRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -213,8 +195,11 @@ public class ChooseCarFragment extends Fragment {
 
                     if(i==actualItem) { //its the selected item (in the middle of the recycler)
                         vh.image.setBackgroundColor(Color.argb(100,0,100,20));
+                        //vh.image.setTransitionName("svg_transition_car");
+
                     }else {
                         vh.image.setBackgroundColor(Color.argb(100,119, 121, 130));
+                        //vh.image.setTransitionName("");
                     }
                 }
 
@@ -234,6 +219,7 @@ public class ChooseCarFragment extends Fragment {
         public String stringInfo;
     }
 
+
     private static class CarAdapter extends RecyclerView.Adapter<ChooseCarFragment.ModelMakeHolder>{
 
         private ArrayList<MakeModelData> data;
@@ -250,7 +236,6 @@ public class ChooseCarFragment extends Fragment {
             this.recycler = recyclerView;
             this.displayMetrics = displayMetrics1;
             this.linearLayoutManager = llm;
-
         }
 
         @Override
@@ -299,11 +284,103 @@ public class ChooseCarFragment extends Fragment {
         }
     }
 
+
+
+    public static class ModelDetail{
+        public int imageResource;
+        public String brandText;
+        public String carMakeText;
+        public boolean setAnimation;
+
+    }
+
+    private static class CarDetailAdapter extends RecyclerView.Adapter<ChooseCarFragment.CarDetailHolder>{
+        private ArrayList<ModelDetail> data;
+
+
+        private CarPickerType type;
+        private final RecyclerView recycler;
+        DisplayMetrics displayMetrics;
+        private LinearLayoutManager linearLayoutManager;
+        final private WeakReference<Activity> baseRef;
+
+        public CarDetailAdapter(Activity activity, LinearLayoutManager llm, CarPickerType adapterType, ArrayList<ModelDetail> dat, RecyclerView recyclerView, DisplayMetrics displayMetrics1){
+                this.type = adapterType;
+                this.data = dat;
+                this.recycler = recyclerView;
+                this.displayMetrics = displayMetrics1;
+                this.linearLayoutManager = llm;
+                this.baseRef = new WeakReference<Activity>(activity);
+        }
+
+        @Override
+        public CarDetailHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.car_info_detail_holder, parent, false);
+
+            ChooseCarFragment.CarDetailHolder imageTile = new ChooseCarFragment.CarDetailHolder(view);
+            return imageTile;
+        }
+
+        @Override
+        public void onBindViewHolder(final CarDetailHolder holder, int position) {
+            ModelDetail datas = data.get(position);
+            if(datas.imageResource!=0)
+                holder.carImage.setImageResource(datas.imageResource);
+            holder.brandText.setText(datas.brandText);
+            holder.makeText.setText(datas.carMakeText);
+            if(datas.setAnimation) {
+                holder.carImage.setTransitionName("svg_transition_car");
+                holder.carImage.getViewTreeObserver().addOnPreDrawListener(
+                        new ViewTreeObserver.OnPreDrawListener() {
+                            @Override
+                            public boolean onPreDraw() {
+                                holder.carImage.getViewTreeObserver().removeOnPreDrawListener(this);
+                                baseRef.get().startPostponedEnterTransition();
+                                Log.e("POSTPONE", "UNPOSTPONING");
+                                return true;
+                            }
+                        }
+                );
+                baseRef.get().startPostponedEnterTransition();
+
+            }else {
+                holder.carImage.setTransitionName("");
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return data.size();
+        }
+    }
+
+    private static class CarDetailHolder extends RecyclerView.ViewHolder{
+        private ImageView carImage;
+        private FrameLayout frame;
+        private TextView brandText;
+        private TextView makeText;
+
+        private int viewWidth = 80;
+
+        public CarDetailHolder(View itemView) {
+            super(itemView);
+            this.frame = (FrameLayout)itemView.findViewById(R.id.car_detial_holder);
+            this.carImage = (ImageView) itemView.findViewById(R.id.svg_car_display);
+            this.brandText = (TextView) itemView.findViewById(R.id.brand_name_textview);
+            this.makeText = (TextView) itemView.findViewById(R.id.car_make_text);
+//            this.defaultMatrix = image.getImageMatrix();
+//            this.displayMetrics = displayM;
+//            this.layout = (FrameLayout) itemView.findViewById(R.id.brand_holder_layout);
+//            this.rv = recycler;
+        }
+    }
+
     private static class ModelMakeHolder extends RecyclerView.ViewHolder{
 
         private ImageView image;
         public TextView textView;
-        public Matrix defaultMatrix;
+        //public Matrix defaultMatrix;
         public DisplayMetrics displayMetrics;
         public FrameLayout layout;
         public RecyclerView rv;
@@ -317,7 +394,7 @@ public class ChooseCarFragment extends Fragment {
             super(itemView);
             this.image = (ImageView) itemView.findViewById(R.id.make_model_image);
             this.textView = (TextView) itemView.findViewById(R.id.make_model_text);
-            this.defaultMatrix = image.getImageMatrix();
+//            this.defaultMatrix = image.getImageMatrix();
             this.displayMetrics = displayM;
             this.layout = (FrameLayout) itemView.findViewById(R.id.brand_holder_layout);
             this.rv = recycler;
@@ -430,7 +507,7 @@ public class ChooseCarFragment extends Fragment {
                 //perfect centre!
 
 
-                image.setImageMatrix(defaultMatrix);
+                //image.setImageMatrix(defaultMatrix);
                 m = image.getImageMatrix();
                 m.reset();
                 image.setImageMatrix(new Matrix());

@@ -1,9 +1,11 @@
 package unfairtools.com.plugmaps.UI;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -21,6 +23,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import javax.inject.Inject;
@@ -38,12 +41,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private ActionBarDrawerToggle toggle;
 
+    private boolean filterWindowOpen = false;
+
 
     @Inject
     MainActivityPresenter presenter;
 
     @Inject
     MapsPresenter mapsPresenter;
+
+    public MainActivity getMainActivity(){
+        return MainActivity.this;
+    }
+
+    public void animateToolbarOpenClose(){
+        Log.e("MainActivity", "TODO: animate toolbar open close");
+        if(filterWindowOpen) {
+            ((LinearLayout) findViewById(R.id.toolbar_top_layout)).getLayoutParams().height = 100;
+           findViewById(R.id.toolbar_filter_options).setVisibility(View.GONE);
+        }else{
+            ((LinearLayout) findViewById(R.id.toolbar_top_layout)).getLayoutParams().height = 300;
+            findViewById(R.id.toolbar_filter_options).setVisibility(View.VISIBLE);
+        }
+        findViewById(R.id.toolbar_top_layout).requestLayout();
+        findViewById(R.id.toolbar_filter_options).requestLayout();
+        filterWindowOpen = !filterWindowOpen;
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.e("MainActivity", "GPS clicked");
 
                 mapsPresenter.gpsClicked();
-
             }
         });
 
@@ -95,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         LayoutInflater mInflater= LayoutInflater.from(this);
 
-        View mCustomView = mInflater.inflate(R.layout.actionbar_searchfield, null);
+        final View mCustomView = mInflater.inflate(R.layout.actionbar_searchfield, null);
 
 
         toolbar.addView(mCustomView);
@@ -106,16 +129,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        ((ImageButton)mCustomView.findViewById(R.id.image_button_select_car))
+                .setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+
+                Intent intent = new Intent(MainActivity.this, CarChooserActivity.class);
+                ActivityOptionsCompat options =
+                        ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(MainActivity.this, mCustomView.findViewById(R.id.image_button_select_car), "svg_transition_car");
+
+                postponeEnterTransition();
+                startActivity(intent, options.toBundle());
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+
+
+
+
+            }
+        });
+
+
         setSupportActionBar(toolbar);
 
         toolbar.findViewById(R.id.toolbar_display_only_text).setVisibility(View.GONE);
-        //toolbar.findViewById(R.id.toolbar_recycler_view_tiles).setVisibility(View.GONE);
         toolbar.findViewById(R.id.toolbar_x_button).setBackgroundResource(R.drawable.ic_close_black);
         toolbar.findViewById(R.id.toolbar_x_button).setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view) {
-//                MainActivity.this.getToolbarEditText().setText("");
             }
         });
 
@@ -193,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onPause(){
-        presenter.deregisterMainActivityPresenter(this);
+       // presenter.deregisterMainActivityPresenter(this);
         super.onPause();
     }
 

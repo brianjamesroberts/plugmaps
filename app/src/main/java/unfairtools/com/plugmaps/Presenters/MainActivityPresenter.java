@@ -22,20 +22,34 @@ public class MainActivityPresenter implements MainActivityContract.Presenter{
     @Inject
     Repository repository;
 
+    private double random;
+
     private BaseApplication baseApplication;
+
+    public MainActivity getMainActivity(){
+        Log.e("MainActPresenter", "Random: " + random);
+        if(mainActivity== null)
+            Log.e("MainActPresenter", "VIEW WAS NULLL ");
+        return mainActivity.getMainActivity();
+    }
 
     public MainActivityPresenter(BaseApplication base){
         this.baseApplication = base;
         base.getServicesComponent().inject(this);
+        this.random = Math.random();
     }
 
 
     public void filterPageSelectorClicked(){
         Log.e("MainActivityPresenter", "FilterPageSelectorClicked");
+        mainActivity.animateToolbarOpenClose();
     }
 
     public void registerMainActivityPresenter(MainActivityContract.View v){
+        Log.e("MainActivityPresenter", random + "REGISTERING MAIN ACTIVITY WITH PRESENTER!");
+
         this.mainActivity = v;
+
         repository.registerPresenter(Repository.PresenterType.MAIN_ACTIVITY_PRESENTER,this);
     }
 
@@ -48,5 +62,9 @@ public class MainActivityPresenter implements MainActivityContract.Presenter{
 
 
     }
+
+
+
+
 
 }

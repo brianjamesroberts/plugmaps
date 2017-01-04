@@ -16,6 +16,9 @@ import unfairtools.com.plugmaps.UI.MainActivity;
 public interface MainActivityContract {
 
     interface View extends BaseView<MainActivityContract.Presenter> {
+
+        void animateToolbarOpenClose();
+        MainActivity getMainActivity();
     }
 
     interface Presenter extends BasePresenter {

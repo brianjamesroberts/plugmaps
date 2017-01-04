@@ -7,7 +7,6 @@
     android:paddingBottom="4dp">
 
     <TextView
-        android:text="FUCK"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/make_model_text"
@@ -29,27 +28,7 @@
             android:minWidth="46dp"
             android:id="@+id/make_model_image"
             android:scaleType="center"
-
-
             />
 
     </FrameLayout>
-    
-    <!--<LinearLayout-->
-        <!--android:layout_width="80dp"-->
-
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="horizontal">-->
-
-        <!--<Space-->
-        <!--android:layout_width="17dp"-->
-        <!--android:layout_height="1dp"-->
-            <!--android:id="@+id/space1" />-->
-
-        <!--<Space-->
-            <!--android:layout_width="17dp"-->
-            <!--android:layout_height="1dp"-->
-            <!--android:id="@+id/space2" />-->
-    <!--</LinearLayout>-->
-
 </LinearLayout>
