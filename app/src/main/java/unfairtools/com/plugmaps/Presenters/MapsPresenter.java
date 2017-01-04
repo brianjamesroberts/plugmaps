@@ -63,9 +63,9 @@ public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarker
      Call deregisterMapFragment when map fragment calls onPause();
      */
     public void deregisterMapFragment(){
-        this.mapFragment = null;
-        this.googleMap = null;
-        repository.deregisterPresenter(Repository.PresenterType.MAPS_PRESENTER);
+        //this.mapFragment = null;
+        //this.googleMap = null;
+        //repository.deregisterPresenter(Repository.PresenterType.MAPS_PRESENTER);
 
     }
 

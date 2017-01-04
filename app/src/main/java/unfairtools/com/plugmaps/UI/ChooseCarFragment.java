@@ -1,6 +1,6 @@
 package unfairtools.com.plugmaps.UI;
 
-import android.app.Activity;
+
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
@@ -294,6 +295,12 @@ public class ChooseCarFragment extends Fragment {
 
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState){
+        super.onViewCreated(view,savedInstanceState);
+        mainPresenter.getMainActivity().supportStartPostponedEnterTransition();
+    }
+
     private static class CarDetailAdapter extends RecyclerView.Adapter<ChooseCarFragment.CarDetailHolder>{
         private ArrayList<ModelDetail> data;
 
@@ -302,15 +309,15 @@ public class ChooseCarFragment extends Fragment {
         private final RecyclerView recycler;
         DisplayMetrics displayMetrics;
         private LinearLayoutManager linearLayoutManager;
-        final private WeakReference<Activity> baseRef;
+        final private WeakReference<AppCompatActivity> baseRef;
 
-        public CarDetailAdapter(Activity activity, LinearLayoutManager llm, CarPickerType adapterType, ArrayList<ModelDetail> dat, RecyclerView recyclerView, DisplayMetrics displayMetrics1){
+        public CarDetailAdapter(AppCompatActivity activity, LinearLayoutManager llm, CarPickerType adapterType, ArrayList<ModelDetail> dat, RecyclerView recyclerView, DisplayMetrics displayMetrics1){
                 this.type = adapterType;
                 this.data = dat;
                 this.recycler = recyclerView;
                 this.displayMetrics = displayMetrics1;
                 this.linearLayoutManager = llm;
-                this.baseRef = new WeakReference<Activity>(activity);
+                this.baseRef = new WeakReference<AppCompatActivity>(activity);
         }
 
         @Override
@@ -322,6 +329,8 @@ public class ChooseCarFragment extends Fragment {
             return imageTile;
         }
 
+
+
         @Override
         public void onBindViewHolder(final CarDetailHolder holder, int position) {
             ModelDetail datas = data.get(position);
@@ -330,20 +339,21 @@ public class ChooseCarFragment extends Fragment {
             holder.brandText.setText(datas.brandText);
             holder.makeText.setText(datas.carMakeText);
             if(datas.setAnimation) {
-                holder.carImage.setTransitionName("svg_transition_car");
-                holder.carImage.getViewTreeObserver().addOnPreDrawListener(
-                        new ViewTreeObserver.OnPreDrawListener() {
-                            @Override
-                            public boolean onPreDraw() {
-                                holder.carImage.getViewTreeObserver().removeOnPreDrawListener(this);
-                                baseRef.get().startPostponedEnterTransition();
-                                Log.e("POSTPONE", "UNPOSTPONING");
-                                return true;
-                            }
-                        }
-                );
-                baseRef.get().startPostponedEnterTransition();
+//                holder.carImage.getViewTreeObserver().addOnPreDrawListener(
+//                        new ViewTreeObserver.OnPreDrawListener() {
+//                            @Override
+//                            public boolean onPreDraw() {
+//                                holder.carImage.getViewTreeObserver().removeOnPreDrawListener(this);
+//                                //holder.carImage.setTransitionName("svg_transition_car");
+//                                //baseRef.get().supportStartPostponedEnterTransition();
+//                                Log.e("POSTPONE", "UNPOSTPONING");
+//                                return true;
+//                            }
+//                        }
+//                );
 
+                holder.carImage.setTransitionName("svg_transition_car");
+//                baseRef.get().supportStartPostponedEnterTransition();
             }else {
                 holder.carImage.setTransitionName("");
             }

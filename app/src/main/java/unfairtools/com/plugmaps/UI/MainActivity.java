@@ -134,14 +134,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v){
 
+
+
                 Intent intent = new Intent(MainActivity.this, CarChooserActivity.class);
                 ActivityOptionsCompat options =
                         ActivityOptionsCompat.
                         makeSceneTransitionAnimation(MainActivity.this, mCustomView.findViewById(R.id.image_button_select_car), "svg_transition_car");
 
-                postponeEnterTransition();
+
+                //supportPostponeEnterTransition();
+
                 startActivity(intent, options.toBundle());
-                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 
 
 
