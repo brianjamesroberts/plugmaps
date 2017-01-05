@@ -2,12 +2,14 @@ package unfairtools.com.plugmaps.UI;
 
 import android.content.Context;
 import android.content.Intent;
+import android.service.chooser.ChooserTarget;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,10 +17,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.ChangeBounds;
+import android.transition.ChangeImageTransform;
+import android.transition.ChangeTransform;
+import android.transition.Fade;
+import android.transition.TransitionInflater;
+import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.FrameLayout;
@@ -54,13 +63,89 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return MainActivity.this;
     }
 
+
+
+    public void swapCarSelectorForMap(){
+        Fragment carChooserFragment = getSupportFragmentManager().findFragmentByTag("chooser");
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+        if(carChooserFragment==null) {
+            carChooserFragment = ChooseCarFragment.newInstance("","");
+        }
+
+
+        ft.replace(R.id.activity_main_map_frame,ChooseCarFragment.newInstance("",""), "map")
+                .addToBackStack(null);
+
+
+
+        supportPostponeEnterTransition();
+        ft.commit();
+        setToolbarForward();
+        getToolbarDisplayOnlyEditText().setVisibility(View.VISIBLE);
+        getToolbarDisplayOnlyEditText().setText("Select your vehicle");
+    }
+
+    public void swapMapForCarSelector(){
+
+        animateToolbarOpenClose(true);
+        getSupportFragmentManager().popBackStack();
+        setToolbarBase();
+
+    }
+
+    //add a back button, get rid of filter button
+    public void setToolbarForward(){
+       getMainActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getMainActivity().getSupportActionBar().setHomeButtonEnabled(true);
+      getMainActivity().getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+        animateToolbarOpenClose(false);
+        getToolbarDisplayOnlyEditText().setVisibility(View.VISIBLE);
+        findViewById(R.id.toolbar_filter_button).setVisibility(View.GONE);
+        findViewById(R.id.main_search_bar_autocomplete_text).setVisibility(View.GONE);
+    }
+
+    //basic filtering/map toolbar
+    public void setToolbarBase(){
+//        toggle.setDrawerIndicatorEnabled(true);
+//
+        getMainActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+////        getMainActivity().getSupportActionBar().setHomeButtonEnabled(true);
+//        //getMainActivity().getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(false);
+//        getMainActivity().getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+        toggle.syncState();
+        animateToolbarOpenClose(true);
+        Log.e("SetToolbarBase","Setting toolbar base");
+        getToolbarDisplayOnlyEditText().setVisibility(View.GONE);
+        findViewById(R.id.toolbar_filter_button).setVisibility(View.VISIBLE);
+        findViewById(R.id.main_search_bar_autocomplete_text).setVisibility(View.VISIBLE);
+
+    }
+
     public void animateToolbarOpenClose(){
         Log.e("MainActivity", "TODO: animate toolbar open close");
         if(filterWindowOpen) {
             ((LinearLayout) findViewById(R.id.toolbar_top_layout)).getLayoutParams().height = 100;
            findViewById(R.id.toolbar_filter_options).setVisibility(View.GONE);
         }else{
-            ((LinearLayout) findViewById(R.id.toolbar_top_layout)).getLayoutParams().height = 300;
+            ((LinearLayout) findViewById(R.id.toolbar_top_layout)).getLayoutParams().height = 600;
+            findViewById(R.id.toolbar_filter_options).setVisibility(View.VISIBLE);
+        }
+        findViewById(R.id.toolbar_top_layout).requestLayout();
+        findViewById(R.id.toolbar_filter_options).requestLayout();
+        filterWindowOpen = !filterWindowOpen;
+
+    }
+
+
+    public void animateToolbarOpenClose(boolean open){
+        Log.e("MainActivity", "TODO: animate toolbar open close");
+        if(!open) {
+            ((LinearLayout) findViewById(R.id.toolbar_top_layout)).getLayoutParams().height = 100;
+            findViewById(R.id.toolbar_filter_options).setVisibility(View.GONE);
+        }else{
+            ((LinearLayout) findViewById(R.id.toolbar_top_layout)).getLayoutParams().height = 600;
             findViewById(R.id.toolbar_filter_options).setVisibility(View.VISIBLE);
         }
         findViewById(R.id.toolbar_top_layout).requestLayout();
@@ -72,24 +157,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        requestWindowFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         setContentView(R.layout.activity_main);
+
+
+
+
 
         ((BaseApplication)getApplication()).getServicesComponent().inject(this);
 
-//        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.map_cointainer);
-//        if(fragment == null){
-//            fragment = ChooseCarFragment.newInstance("","");
-//        }
-//
-//
-//        if(!fragment.isAdded()) {
-//            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//            fragmentTransaction.add(R.id.map_cointainer,fragment);
-//            fragmentTransaction.commit();
-//        }
 
-
-        Fragment mapFragment = getSupportFragmentManager().findFragmentById(R.id.activity_main_map_frame);
+        Fragment mapFragment = getSupportFragmentManager().findFragmentByTag("map");
         if(mapFragment == null){
             mapFragment = MapFragment.newInstanceCustom();
         }
@@ -98,21 +177,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(!mapFragment.isAdded()) {
             Log.e("Adding", "Adding new map fragment!");
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.add(R.id.activity_main_map_frame,mapFragment);
+            fragmentTransaction.add(R.id.activity_main_map_frame,mapFragment,"map");
+            //fragmentTransaction.add(R.id.activity_main_map_frame,mapFragment);
             fragmentTransaction.commit();
         }
-
-
-
-
-        ((FloatingActionButton)findViewById(R.id.fab)).setOnClickListener(new FloatingActionButton.OnClickListener(){
-            public void onClick(View v){
-
-                Log.e("MainActivity", "GPS clicked");
-
-                mapsPresenter.gpsClicked();
-            }
-        });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.custom_toolbar);
 
@@ -135,18 +203,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View v){
 
 
-
-                Intent intent = new Intent(MainActivity.this, CarChooserActivity.class);
-                ActivityOptionsCompat options =
-                        ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(MainActivity.this, mCustomView.findViewById(R.id.image_button_select_car), "svg_transition_car");
-
-
-                //supportPostponeEnterTransition();
-
-                startActivity(intent, options.toBundle());
-
-
+                presenter.swapCarSelectorForMap();
 
 
             }
@@ -168,18 +225,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+//        ActionBarDrawerToggle
+        toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                     onBackPressed();
+                    //swapMapForCarSelector();
                 }
                 else{
-
                     if (!drawer.isDrawerOpen(GravityCompat.START)) {
                         Log.e("MainActivity","opening drawer");
                         drawer.openDrawer(GravityCompat.START);
@@ -198,6 +256,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+    }
+
+    @Override
+    public void onBackPressed(){
+        if(getSupportFragmentManager().getBackStackEntryCount()==0)
+            finish();
+        else
+            swapMapForCarSelector();
     }
 
 
@@ -223,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     public AutoCompleteTextView getToolbarEditText(){
-        return (AutoCompleteTextView)toolbar.findViewById(R.id.main_search_bar);
+        return (AutoCompleteTextView)findViewById(R.id.main_search_bar_autocomplete_text);
     }
 
     public FrameLayout getToolbarFrameLayout(){

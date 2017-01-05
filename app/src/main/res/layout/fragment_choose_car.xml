@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="unfairtools.com.plugmaps.UI.ChooseCarFragment">
+    tools:context="unfairtools.com.plugmaps.UI.ChooseCarFragment"
+    android:layout_marginTop="100dp">
 
     <!--&lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;-->
     <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->

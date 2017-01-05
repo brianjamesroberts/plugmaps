@@ -26,6 +26,14 @@ public class MainActivityPresenter implements MainActivityContract.Presenter{
 
     private BaseApplication baseApplication;
 
+    public void swapMapForCarSelector(){
+        mainActivity.swapMapForCarSelector();
+    }
+
+    public void swapCarSelectorForMap(){
+        mainActivity.swapCarSelectorForMap();
+    }
+
     public MainActivity getMainActivity(){
         Log.e("MainActPresenter", "Random: " + random);
         if(mainActivity== null)

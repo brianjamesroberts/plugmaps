@@ -1,64 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="wrap_content"
         android:id="@+id/toolbar_top_layout">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-
-        <AutoCompleteTextView
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:textSize="14sp"
-            android:textColor="#212121"
-            android:id="@+id/main_search_bar"
-            android:inputType="text|textNoSuggestions"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
+            android:orientation="horizontal"
+            >
 
-            />
+            <AutoCompleteTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textSize="14sp"
+                android:textColor="#212121"
+                android:id="@+id/main_search_bar_autocomplete_text"
+                android:inputType="text|textNoSuggestions"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                />
 
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:maxLines="1"
-            android:textSize="14sp"
-            android:textColor="#212121"
-            android:id="@+id/toolbar_display_only_text"
-            android:visibility="gone"
-            />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:textSize="14sp"
+                android:textColor="#212121"
+                android:id="@+id/toolbar_display_only_text"
+                android:visibility="gone"
+                />
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:id="@+id/toolbar_x_button"
-            android:visibility="gone"/>
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:id="@+id/toolbar_x_button"
+                android:visibility="gone"/>
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:background="@drawable/ic_filter_on"
-            android:id="@+id/toolbar_filter_button"
-            android:layout_marginRight="8dp"/>
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:background="@drawable/ic_filter_on"
+                android:id="@+id/toolbar_filter_button"
+                android:layout_marginRight="8dp"/>
 
-    </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
+            android:layout_marginTop="50dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -71,6 +69,7 @@
                 android:transitionName="svg_transition_car"
                 android:layout_width="160dp"
                 android:layout_height="80dp"
+                android:layout_gravity="center"
                 android:src="@drawable/ic_tesla_model_s"/>
 
         </LinearLayout>
@@ -87,4 +86,3 @@
         <!--android:layout_below="@id/toolbar_top_layout"-->
         <!--android:visibility="gone"/>-->
 
-</RelativeLayout>

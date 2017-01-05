@@ -19,6 +19,10 @@ public interface MainActivityContract {
 
         void animateToolbarOpenClose();
         MainActivity getMainActivity();
+
+        void swapCarSelectorForMap();
+        void swapMapForCarSelector();
+
     }
 
     interface Presenter extends BasePresenter {

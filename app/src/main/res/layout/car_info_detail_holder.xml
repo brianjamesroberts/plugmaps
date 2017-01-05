@@ -30,7 +30,6 @@
             android:scaleType="center"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
-            android:transitionName="svg_transition_car"
             />
         <TextView
             android:layout_width="wrap_content"

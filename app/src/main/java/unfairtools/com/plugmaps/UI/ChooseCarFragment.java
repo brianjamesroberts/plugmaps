@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
+import android.transition.TransitionInflater;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -135,7 +136,7 @@ public class ChooseCarFragment extends Fragment {
 
 
         //TODO: Implement this bad boy!
-        RecyclerView makeRecycler = (RecyclerView) view.findViewById(R.id.make_recycler);
+        final RecyclerView makeRecycler = (RecyclerView) view.findViewById(R.id.make_recycler);
 
 
 
@@ -149,12 +150,24 @@ public class ChooseCarFragment extends Fragment {
         makeRecycler.setLayoutManager(mLLM2);
         makeRecycler.setAdapter(new CarDetailAdapter(mainPresenter.getMainActivity(),mLLM2,CarPickerType.MODEL, repository.getModelDetailData("Tesla"),makeRecycler,getResources().getDisplayMetrics()));
 
+
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(manufacturerRecycler);
 
         SnapHelper helper2 = new LinearSnapHelper();
         helper2.attachToRecyclerView(makeRecycler);
 
+
+
+        makeRecycler.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Log.e("Layout finished", "Layout finished");
+                mainPresenter.getMainActivity().supportStartPostponedEnterTransition();
+                getActivity().supportStartPostponedEnterTransition();
+                makeRecycler.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
 
 
 
@@ -298,7 +311,6 @@ public class ChooseCarFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
         super.onViewCreated(view,savedInstanceState);
-        mainPresenter.getMainActivity().supportStartPostponedEnterTransition();
     }
 
     private static class CarDetailAdapter extends RecyclerView.Adapter<ChooseCarFragment.CarDetailHolder>{
@@ -338,25 +350,10 @@ public class ChooseCarFragment extends Fragment {
                 holder.carImage.setImageResource(datas.imageResource);
             holder.brandText.setText(datas.brandText);
             holder.makeText.setText(datas.carMakeText);
-            if(datas.setAnimation) {
-//                holder.carImage.getViewTreeObserver().addOnPreDrawListener(
-//                        new ViewTreeObserver.OnPreDrawListener() {
-//                            @Override
-//                            public boolean onPreDraw() {
-//                                holder.carImage.getViewTreeObserver().removeOnPreDrawListener(this);
-//                                //holder.carImage.setTransitionName("svg_transition_car");
-//                                //baseRef.get().supportStartPostponedEnterTransition();
-//                                Log.e("POSTPONE", "UNPOSTPONING");
-//                                return true;
-//                            }
-//                        }
-//                );
-
+            if(position==1)
                 holder.carImage.setTransitionName("svg_transition_car");
-//                baseRef.get().supportStartPostponedEnterTransition();
-            }else {
+            else
                 holder.carImage.setTransitionName("");
-            }
         }
 
         @Override

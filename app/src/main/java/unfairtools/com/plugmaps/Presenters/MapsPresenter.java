@@ -50,6 +50,8 @@ public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarker
 
     MapsContract.View mapFragment;
 
+
+
     /*
      * Must be called every time a map fragment when it calls onResume();
      * Call deregisterMapFragment when finished.
@@ -70,7 +72,6 @@ public class MapsPresenter implements MapsContract.Presenter, GoogleMap.OnMarker
     }
 
     HashMap<MarkerInfo,MarkerOptions> markerOptionsMap;
-
 
 
     public void gpsClicked(){
