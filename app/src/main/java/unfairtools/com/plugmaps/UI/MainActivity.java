@@ -33,6 +33,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import javax.inject.Inject;
@@ -125,16 +126,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void animateToolbarOpenClose(){
         Log.e("MainActivity", "TODO: animate toolbar open close");
-        if(filterWindowOpen) {
-            ((LinearLayout) findViewById(R.id.toolbar_top_layout)).getLayoutParams().height = 100;
-           findViewById(R.id.toolbar_filter_options).setVisibility(View.GONE);
-        }else{
-            ((LinearLayout) findViewById(R.id.toolbar_top_layout)).getLayoutParams().height = 600;
-            findViewById(R.id.toolbar_filter_options).setVisibility(View.VISIBLE);
-        }
-        findViewById(R.id.toolbar_top_layout).requestLayout();
-        findViewById(R.id.toolbar_filter_options).requestLayout();
+        animateToolbarOpenClose(!filterWindowOpen);
         filterWindowOpen = !filterWindowOpen;
+
 
     }
 
@@ -142,45 +136,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void animateToolbarOpenClose(boolean open){
         Log.e("MainActivity", "TODO: animate toolbar open close");
         if(!open) {
-            ((LinearLayout) findViewById(R.id.toolbar_top_layout)).getLayoutParams().height = 100;
+            ((LinearLayout) findViewById(R.id.searchbar_framelayout)).getLayoutParams().height = 150;
             findViewById(R.id.toolbar_filter_options).setVisibility(View.GONE);
         }else{
-            ((LinearLayout) findViewById(R.id.toolbar_top_layout)).getLayoutParams().height = 600;
+            ((LinearLayout) findViewById(R.id.searchbar_framelayout)).getLayoutParams().height = 600;
             findViewById(R.id.toolbar_filter_options).setVisibility(View.VISIBLE);
         }
-        findViewById(R.id.toolbar_top_layout).requestLayout();
+        findViewById(R.id.searchbar_framelayout).requestLayout();
         findViewById(R.id.toolbar_filter_options).requestLayout();
-        filterWindowOpen = !filterWindowOpen;
+        //filterWindowOpen = !filterWindowOpen;
 
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-        requestWindowFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         setContentView(R.layout.activity_main);
 
-
-
-
-
         ((BaseApplication)getApplication()).getServicesComponent().inject(this);
-
 
         Fragment mapFragment = getSupportFragmentManager().findFragmentByTag("map");
         if(mapFragment == null){
             mapFragment = MapFragment.newInstanceCustom();
         }
 
-
         if(!mapFragment.isAdded()) {
             Log.e("Adding", "Adding new map fragment!");
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.add(R.id.activity_main_map_frame,mapFragment,"map");
-            //fragmentTransaction.add(R.id.activity_main_map_frame,mapFragment);
             fragmentTransaction.commit();
         }
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.custom_toolbar);
 
@@ -188,8 +174,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         final View mCustomView = mInflater.inflate(R.layout.actionbar_searchfield, null);
 
+       // FrameLayout frame = (FrameLayout) findViewById(R.id.searchbar_framelayout);
+
+
+
 
         toolbar.addView(mCustomView);
+
 
         ((ImageButton)mCustomView.findViewById(R.id.toolbar_filter_button)).setOnClickListener(new ImageButton.OnClickListener(){
             public void onClick(View v){
@@ -197,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        ((ImageButton)mCustomView.findViewById(R.id.image_button_select_car))
+        ((ImageButton)findViewById(R.id.image_button_select_car))
                 .setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -245,14 +236,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         //nBackPressed();
                     }
                 }
-
                 Log.e("MainActivity","Navigation clicked");
             }
         });
-
-
-
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 

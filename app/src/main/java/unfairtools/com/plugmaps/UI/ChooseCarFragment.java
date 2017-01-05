@@ -231,6 +231,7 @@ public class ChooseCarFragment extends Fragment {
     public static class MakeModelData{
         public Drawable img;
         public String stringInfo;
+        public Repository.ManufacturerCode manufacturerCode;
     }
 
 

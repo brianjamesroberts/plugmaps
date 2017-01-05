@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import unfairtools.com.plugmaps.Base.BaseApplication;
 import unfairtools.com.plugmaps.OpenHelper;
 import unfairtools.com.plugmaps.Repository;
 
@@ -17,15 +18,15 @@ import unfairtools.com.plugmaps.Repository;
 @Module
 public class RepoModule {
 
-    private Context context;
+    private BaseApplication base;
 
-    public RepoModule(Context c) {
-        context = c;
+    public RepoModule(BaseApplication baseApplication) {
+        base = baseApplication;
     }
 
     @Provides
     @Singleton
     Repository provideDatabase() {
-        return Repository.newInstance(context);
+        return Repository.newInstance(base);
     }
 }
